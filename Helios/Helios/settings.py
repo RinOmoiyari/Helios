@@ -25,7 +25,7 @@ SECRET_KEY = 'p588#-dss9ekq9bj_n18bepj6xtmlt2ad!0tslk2@5_0rmb6c&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'helios.pythonanywhere.com']
 
 
 # Application definition
