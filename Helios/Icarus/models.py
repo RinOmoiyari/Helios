@@ -34,10 +34,11 @@ class WorkRequests(models.Model):
     modified_by = models.CharField(max_length=50, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=2, choices=REQ_STATES, default="DR")
-    fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE)
+    fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE,blank=True, null=True)
 
     def __str__(self):
         return self.summary
+
 class Roles(models.Model):
     name = models.CharField(max_length=50, blank=False)
     acronym = models.CharField(max_length=5, blank=False)
