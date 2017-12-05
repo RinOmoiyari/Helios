@@ -1,0 +1,26 @@
+{% extends 'Icarus/base.html' %}
+
+{% block content %}
+        <h1>Icarus - Task: {{ task.pk }}</h1>
+        <table class="table table-striped Tasks">
+          <thead class="black">
+            <tr>
+              <th>TID</th>
+              <th>Status</th>
+              <th>Title</th>
+              <th>Assigned To</th>
+              <th>WRID</th>
+              <th>Related Request</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ task.pk }}</td>
+              <td>{{ task.status }}</td>
+              <td><a href="#">{{ task.name }}</a></td>
+              <td>{{ task.assigned_to }}</td>
+              <td>{{ task.fk_work_req.pk }}</td>
+              <td><a href="{% url 'WR_detail' pk=task.fk_work_req.pk %}">{{ task.fk_work_req.summary }}</a></td>
+            </tr>
+          </tbody>
+        </table>
+{% endblock %}

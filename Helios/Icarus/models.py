@@ -76,12 +76,12 @@ class Tasks(models.Model):
         ("C", "Completed"),
         ("X", "Canceled"),
     )
-    fk_work_req = models.ForeignKey('WorkRequests', on_delete=models.CASCADE)
-    fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE)
-    fk_task_template = models.ForeignKey('TaskTemplates', on_delete=models.CASCADE)
+    fk_work_req = models.ForeignKey('WorkRequests', on_delete=models.CASCADE, blank=True, null=True)
+    fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE, blank=True, null=True)
+    fk_task_template = models.ForeignKey('TaskTemplates', on_delete=models.CASCADE, blank=True, null=True)
     status = models.CharField(max_length=1, choices=STATUSES, default="P")
     name = models.CharField(max_length=36, blank=False)
-    role = models.ForeignKey('Roles',on_delete=models.CASCADE)
+    role = models.ForeignKey('Roles',on_delete=models.CASCADE, blank=True, null=True)
     assigned_to = models.CharField(max_length=50)
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.CharField(max_length=50, blank=False)

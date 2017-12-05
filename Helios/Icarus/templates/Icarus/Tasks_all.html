@@ -1,28 +1,7 @@
 {% extends 'Icarus/base.html' %}
 
 {% block content %}
-        <h1>Icarus - Work Request: {{ wrequest.pk }}</h1>
-        <table class="table table-striped WR">
-          <thead class="black">
-            <tr>
-              <th>WRID</th>
-              <th>Title</th>
-              <th>Created By</th>
-              <th>Created On</th>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{ wrequest.pk }}</td>
-              <td>{{ wrequest.summary }}</td>
-              <td>{{ wrequest.create_by }}</td>
-              <td>{{ wrequest.create_date }}</td>
-            </tr>
-            <tr>
-              <td colspan="4">{{ wrequest.description }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <h2>Related Tasks</h2>
+        <h1>Icarus - All Tasks</h1>
         <table class="table table-striped Tasks">
           <thead class="black">
             <tr>
@@ -41,10 +20,9 @@
               <td><a href="{% url 'Tasks_detail' pk=task.pk %}">{{ task.name }}</a></td>
               <td>{{ task.assigned_to }}</td>
               <td>{{ task.fk_work_req.pk }}</td>
-              <td>{{ task.fk_work_req.summary }}</td>
+              <td><a href="{% url 'WR_detail' pk=task.fk_work_req.pk %}">{{ task.fk_work_req.summary }}</a></td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
-
 {% endblock %}
