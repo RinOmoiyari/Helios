@@ -1,0 +1,20 @@
+{% extends 'Icarus/base.html' %}
+
+{% block content %}
+        <h1>Icarus - All Task Templates</h1>
+        <table class="table table-striped TTs">
+          <thead class="black">
+            <tr>
+              <th>PFID</th>
+              <th>Name</th>
+          </thead>
+          <tbody>
+            {% for TaskTemplate in tasktemplates %}
+            <tr>
+              <td>{{ TaskTemplate.pk }} </td>
+              <td><a href="{% url 'TT_detail' pk=TaskTemplate.pk %}">{{ TaskTemplate.name }}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+{% endblock %}

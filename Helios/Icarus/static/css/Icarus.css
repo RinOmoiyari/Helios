@@ -6,6 +6,14 @@
     color: white;
   }
 
+  .TTs th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #482382;
+      color: white;
+    }
+
   .post-form textarea, .post-form input {
       width: 100%;
   }

@@ -1,0 +1,20 @@
+{% extends 'Icarus/base.html' %}
+
+{% block content %}
+        <h1>Icarus - All Process Flows</h1>
+        <table class="table table-striped PFs">
+          <thead class="black">
+            <tr>
+              <th>PFID</th>
+              <th>Name</th>
+          </thead>
+          <tbody>
+            {% for ProcessFlow in ProcessFlows %}
+            <tr>
+              <td>{{ ProcessFlow.pk }} </td>
+              <td><a href="{% url 'PF_detail' pk=ProcessFlow.pk %}">{{ ProcessFlow.name }}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+{% endblock %}

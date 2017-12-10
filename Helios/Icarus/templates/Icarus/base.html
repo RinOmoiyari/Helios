@@ -37,7 +37,7 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'WR_all' %}">All Work Requests</a>
               <a class="dropdown-item" href="#">My Requests</a>
-              <a class="dropdown-item" href="{% url 'Tasks_all' %}">All Tasks</a>
+              <a class="dropdown-item" href="{% url 'Task_all' %}">All Tasks</a>
             </div>
           </li>
 
@@ -52,8 +52,18 @@
               <a class="dropdown-item" href="#">Another action</a>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Admin</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Admin
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'PF_all' %}">All Process Flows</a>
+              <a class="dropdown-item" href="{% url 'PF_new' %}">Create a new Process Flow</a>
+              <a class="dropdown-item" href="{% url 'TT_all' %}">All Task Templates</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'Role_all' %}">All Roles</a>
+              <a class="dropdown-item" href="{% url 'Role_new' %}">Create a new Role</a>
+            </div>
           </li>
           <!--<li class="nav-item">
             <a class="nav-link disabled" href="#">Disabled</a>

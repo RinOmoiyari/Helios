@@ -60,7 +60,7 @@ class TaskTemplates(models.Model):
     orderid = models.IntegerField(blank=False)
     Trigger = models.IntegerField(blank=False)
     name = models.CharField(max_length=36, blank=False)
-    role = models.ForeignKey('Roles',on_delete=models.CASCADE)
+    role = models.ForeignKey('Roles',on_delete=models.CASCADE,blank=True, null=True)
     self_assign = models.NullBooleanField(default=False)
     default_status = models.CharField(max_length=1, choices=TEMPLATE_STATUSES, default="P")
 

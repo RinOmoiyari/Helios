@@ -1,7 +1,7 @@
 {% extends 'Icarus/base.html' %}
 
 {% block content %}
-<h1>New Work Request</h1>
+<h1>New task</h1>
 <form method="POST" class="post-form">
   {% csrf_token %}
   {{ form.as_p }}

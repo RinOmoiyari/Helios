@@ -1,7 +1,10 @@
 {% extends 'Icarus/base.html' %}
 
 {% block content %}
-        <h1>Icarus - Work Request: {{ wrequest.pk }}</h1>
+        <h1>Icarus - Work Request: {{ wrequest.pk }}
+        <a href="{% url 'WR_edit' pk=wrequest.pk %}">
+          <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
+        </a></h1>
         <table class="table table-striped WR">
           <thead class="black">
             <tr>
@@ -22,7 +25,12 @@
             </tr>
           </tbody>
         </table>
-        <h2>Related Tasks</h2>
+
+        <h2>Related Tasks
+          <a href="{% url 'Task_new' wrequest.pk %}">
+            <button type="button" class="btn btn-outline-primary btn-sm">New</button>
+          </a>
+        </h2>
         <table class="table table-striped Tasks">
           <thead class="black">
             <tr>
@@ -38,7 +46,7 @@
             <tr>
               <td>{{ task.pk }}</td>
               <td>{{ task.get_status_display }}</td>
-              <td><a href="{% url 'Tasks_detail' pk=task.pk %}">{{ task.name }}</a></td>
+              <td><a href="{% url 'Task_detail' pk=task.pk %}">{{ task.name }}</a></td>
               <td>{{ task.assigned_to }}</td>
               <td>{{ task.fk_work_req.pk }}</td>
               <td>{{ task.fk_work_req.summary }}</td>

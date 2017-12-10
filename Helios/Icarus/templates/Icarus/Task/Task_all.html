@@ -17,7 +17,7 @@
             <tr>
               <td>{{ task.pk }}</td>
               <td>{{ task.get_status_display }}</td>
-              <td><a href="{% url 'Tasks_detail' pk=task.pk %}">{{ task.name }}</a></td>
+              <td><a href="{% url 'Task_detail' pk=task.pk %}">{{ task.name }}</a></td>
               <td>{{ task.assigned_to }}</td>
               <td>{{ task.fk_work_req.pk }}</td>
               <td><a href="{% url 'WR_detail' pk=task.fk_work_req.pk %}">{{ task.fk_work_req.summary }}</a></td>

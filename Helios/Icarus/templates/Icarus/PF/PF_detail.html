@@ -1,0 +1,44 @@
+{% extends 'Icarus/base.html' %}
+
+{% block content %}
+        <h1>Icarus - Process Flow: {{ ProcessFlow.pk }}
+        <a href="{% url 'PF_edit' pk=ProcessFlow.pk %}">
+          <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
+        </a></h1>
+        <ul>
+          <li><strong>PFID:</strong> {{ ProcessFlow.pk }}</li>
+          <li><strong>Name:</strong> {{ ProcessFlow.name }}</li>
+          <li><strong>Description:</strong> {{ ProcessFlow.description }}</li>
+        </ul>
+
+        <h2>Related Task Templates
+          <a href="{% url 'TT_new' ProcessFlow.pk %}">
+            <button type="button" class="btn btn-outline-primary btn-sm">New</button>
+          </a>
+        </h2>
+        <table class="table table-striped TTs">
+          <thead class="black">
+            <tr>
+              <th>TTID</th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Order</th>
+              <th>Trigger</th>
+              <th>Edit</th>
+          </thead>
+          <tbody>
+            {% for tasktemplate in tasktemplates %}
+            <tr>
+              <td>{{ tasktemplate.pk }}</td>
+              <td><a href="{% url 'TT_detail' pk=tasktemplate.pk %}">{{ tasktemplate.name }}</a></td>
+              <td>{{ tasktemplate.role }}</td>
+              <td>{{ tasktemplate.orderid }}</td>
+              <td>{{ tasktemplate.Trigger }}</td>
+              <td><a href="{% url 'TT_edit' tasktemplate.pk %}">
+                <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
+              </a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+{% endblock %}
