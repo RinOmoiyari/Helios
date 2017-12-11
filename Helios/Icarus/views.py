@@ -61,7 +61,19 @@ def Task_new(request, WRID):
         data = {'fk_work_req':WRID }
         form = forms.Task_NewForm(initial=data)
 
-    return render(request, 'Icarus/Task/Task_new.html', {'form':form})
+def Task_initialtasks(request, WRID, PFID):
+    templates = models.TaskTemplates.objects.filter(fk_flow_id=PFID)
+
+    for template in templates:
+        task = models.Tasks()
+        task.fk_work_req_id = WRID
+        task.fk_flow_id = PFID
+        task.fk_task_template_id = template.pk
+        task.role_id = template.role.id
+        task.name = template.name
+        task.save()
+
+    return redirect('WR_detail', pk=WRID)
 
 def Task_detail(request, pk):
     task = models.Tasks.objects.get(pk=pk)
@@ -79,6 +91,12 @@ def Task_edit(request, pk):
     else:
         form = forms.Task_NewForm(instance=task)
     return render(request, 'Icarus/Task/Task_edit.html', {'form': form})
+
+def Task_delete(request, pk):
+    task = get_object_or_404(models.Tasks, pk=pk)
+    task.delete()
+
+    return redirect('Task_all')
 
 def PF_all(request):
     ProcessFlows = models.Flows.objects.all

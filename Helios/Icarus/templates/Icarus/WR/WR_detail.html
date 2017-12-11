@@ -10,6 +10,7 @@
             <tr>
               <th>WRID</th>
               <th>Title</th>
+              <th>Process Flow</th>
               <th>Created By</th>
               <th>Created On</th>
           </thead>
@@ -17,6 +18,7 @@
             <tr>
               <td>{{ wrequest.pk }}</td>
               <td>{{ wrequest.summary }}</td>
+              <td>{{ wrequest.fk_flow }} (<a href="{% url 'PF_detail' pk=wrequest.fk_flow.pk %}">view</a>)</td>
               <td>{{ wrequest.create_by }}</td>
               <td>{{ wrequest.create_date }}</td>
             </tr>
@@ -30,6 +32,9 @@
           <a href="{% url 'Task_new' wrequest.pk %}">
             <button type="button" class="btn btn-outline-primary btn-sm">New</button>
           </a>
+          <a href="{% url 'Task_initialtasks' wrequest.pk wrequest.fk_flow.pk %}">
+            <button type="button" class="btn btn-outline-primary btn-sm">Create Initial Tasks</button>
+          </a>
         </h2>
         <table class="table table-striped Tasks">
           <thead class="black">
@@ -38,8 +43,7 @@
               <th>Status</th>
               <th>Title</th>
               <th>Assigned To</th>
-              <th>WRID</th>
-              <th>Related Request</th>
+              <th>Role</th>
           </thead>
           <tbody>
             {% for task in tasks %}
@@ -48,8 +52,7 @@
               <td>{{ task.get_status_display }}</td>
               <td><a href="{% url 'Task_detail' pk=task.pk %}">{{ task.name }}</a></td>
               <td>{{ task.assigned_to }}</td>
-              <td>{{ task.fk_work_req.pk }}</td>
-              <td>{{ task.fk_work_req.summary }}</td>
+              <td>{{ task.role }}</td>
             </tr>
             {% endfor %}
           </tbody>

@@ -6,7 +6,7 @@ class WR_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.WorkRequests
-        fields = ('summary', 'description',)
+        fields = ('summary', 'description','fk_flow')
 
 class Task_NewForm(forms.ModelForm):
 

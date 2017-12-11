@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^task/(?P<pk>\d+)/$', views.Task_detail, name='Task_detail'),
     url(r'^task/new/WRID=(?P<WRID>\d+)$', views.Task_new, name='Task_new'),
     url(r'^task/(?P<pk>\d+)/edit$', views.Task_edit, name='Task_edit'),
+    url(r'^task/(?P<pk>\d+)/delete$', views.Task_delete, name='Task_delete'),
     url(r'^PF/$', views.PF_all, name='PF_all'),
     url(r'^PF/new/$', views.PF_new, name='PF_new'),
     url(r'^PF/(?P<pk>\d+)/$', views.PF_detail, name='PF_detail'),
@@ -25,4 +26,5 @@ urlpatterns = [
     url(r'^role/(?P<pk>\d+)/$', views.Role_detail, name='Role_detail'),
     url(r'^role/new/', views.Role_new, name='Role_new'),
     url(r'^role/(?P<pk>\d+)/edit$', views.Role_edit, name='Role_edit'),
+    url(r'^wr/(?P<WRID>\d+)/(?P<PFID>\d+)$', views.Task_initialtasks, name='Task_initialtasks'),
 ]

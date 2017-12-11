@@ -9,7 +9,7 @@
               <th>Status</th>
               <th>Title</th>
               <th>Assigned To</th>
-              <th>WRID</th>
+              <th>Role</th>
               <th>Related Request</th>
           </thead>
           <tbody>
@@ -19,7 +19,7 @@
               <td>{{ task.get_status_display }}</td>
               <td><a href="{% url 'Task_detail' pk=task.pk %}">{{ task.name }}</a></td>
               <td>{{ task.assigned_to }}</td>
-              <td>{{ task.fk_work_req.pk }}</td>
+              <td>{{ task.role }}</td>
               <td><a href="{% url 'WR_detail' pk=task.fk_work_req.pk %}">{{ task.fk_work_req.summary }}</a></td>
             </tr>
             {% endfor %}
