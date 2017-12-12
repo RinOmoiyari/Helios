@@ -88,5 +88,9 @@ class Tasks(models.Model):
     modified_by = models.CharField(max_length=50, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
 
+    def complete(self):
+        self.status = 'C'
+        self.save()
+
     def __str__(self):
         return self.name

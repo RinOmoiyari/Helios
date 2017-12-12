@@ -61,6 +61,8 @@ def Task_new(request, WRID):
         data = {'fk_work_req':WRID }
         form = forms.Task_NewForm(initial=data)
 
+    return render(request, 'Icarus/Task/Task_new.html', {'form': form})
+
 def Task_initialtasks(request, WRID, PFID):
     templates = models.TaskTemplates.objects.filter(fk_flow_id=PFID)
 
@@ -96,7 +98,25 @@ def Task_delete(request, pk):
     task = get_object_or_404(models.Tasks, pk=pk)
     task.delete()
 
+
+
     return redirect('Task_all')
+
+def Task_complete(request, pk):
+    task = get_object_or_404(models.Tasks, pk=pk)
+    task.complete()
+
+    if task.fk_task_template:
+        othertasksinWR = models.Tasks.objects.filter(fk_work_req_id=task.fk_work_req_id)
+
+        for othertask in othertasksinWR:
+            if othertask.fk_task_template:
+                othertasktrigger = get_object_or_404(models.TaskTemplates, pk=othertask.fk_task_template.pk)
+                if othertasktrigger.Trigger == task.fk_task_template.orderid and othertask.status == 'P':
+                    othertask.status = 'A'
+                    othertask.save()
+
+    return redirect('WR_detail', pk=task.fk_work_req_id)
 
 def PF_all(request):
     ProcessFlows = models.Flows.objects.all
@@ -183,7 +203,7 @@ def Role_new(request):
             Role = form.save(commit=False)
             Role.create_by = 'unknown user'
             Role.save()
-            return redirect('Role_detail', pk=Role.pk)
+            return redirect('Role_all')
         else:
             form = forms.TT_NewForm(request.POST)
     else:

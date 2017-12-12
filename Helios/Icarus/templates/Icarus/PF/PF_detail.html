@@ -19,20 +19,18 @@
         <table class="table table-striped TTs">
           <thead class="black">
             <tr>
-              <th>TTID</th>
+              <th>Order</th>
               <th>Name</th>
               <th>Role</th>
-              <th>Order</th>
               <th>Trigger</th>
               <th>Edit</th>
           </thead>
           <tbody>
             {% for tasktemplate in tasktemplates %}
             <tr>
-              <td>{{ tasktemplate.pk }}</td>
+              <td>{{ tasktemplate.orderid }}</td>
               <td><a href="{% url 'TT_detail' pk=tasktemplate.pk %}">{{ tasktemplate.name }}</a></td>
               <td>{{ tasktemplate.role }}</td>
-              <td>{{ tasktemplate.orderid }}</td>
               <td>{{ tasktemplate.Trigger }}</td>
               <td><a href="{% url 'TT_edit' tasktemplate.pk %}">
                 <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>

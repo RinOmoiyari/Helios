@@ -20,7 +20,7 @@
           <tbody>
             <tr>
               <td>{{ task.pk }}</td>
-              <td>{{ task.status }}</td>
+              <td>{{ task.get_status_display }}</td>
               <td>{{ task.name }}</td>
               <td>{{ task.assigned_to }}</td>
               <td>{{ task.fk_work_req.pk }}</td>

@@ -24,3 +24,11 @@
       background-color: #708000;
       color: white;
     }
+
+    .Role th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #c18d09;
+        color: white;
+      }

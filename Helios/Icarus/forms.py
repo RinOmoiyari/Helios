@@ -12,7 +12,7 @@ class Task_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Tasks
-        fields = ('fk_work_req', 'name', 'status', 'role')
+        fields = ('fk_work_req', 'fk_flow','fk_task_template', 'name', 'status', 'role')
 
 class PF_NewForm(forms.ModelForm):
 
