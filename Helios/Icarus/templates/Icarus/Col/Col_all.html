@@ -1,0 +1,27 @@
+{% extends 'Icarus/base.html' %}
+
+{% block content %}
+        <h1>Helios - All Colleges
+          <a href="{% url 'Col_new' %}">
+            <button type="button" class="btn btn-outline-primary btn-sm">Create a new College</button>
+        </a></h1>
+        <table class="table table-striped College">
+          <thead class="black">
+            <tr>
+              <th>Acronym</th>
+              <th>Name</th>
+              <th>Edit</th>
+
+          </thead>
+          <tbody>
+            {% for College in Colleges %}
+            <tr>
+              <td>{{ College.acronym }}</td>
+              <td><a href="{% url 'Col_detail' pk=College.pk %}">{{ College.name }}</a></td>
+              <td><a href="{% url 'Col_edit' pk=College.pk %}"><button type="button" class="btn btn-outline-primary btn-sm">Edit</button></a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+{% endblock %}

@@ -1,10 +1,48 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.db.models import Max
 from . import forms, models
 
 # Create your views here.
 def home(request):
     return render(request, 'Icarus/home.html')
+
+def Proj_all(request):
+    projects = models.Projects.objects.all
+    return render(request, 'Icarus/Proj/Proj_all.html', {'projects':projects})
+
+def Proj_detail(request, pk):
+    project = models.Projects.objects.get(pk=pk)
+    WRs = models.WorkRequests.objects.filter(fk_project=project.pk)
+    return render(request, 'Icarus/Proj/Proj_detail.html', {'project':project, 'WRs':WRs})
+
+def Proj_new(request):
+    if request.method == "POST":
+        form = forms.Proj_NewForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.create_by = 'unknown user'
+            project.save()
+            return redirect('Proj_all')
+        else:
+            form = forms.Proj_NewForm(request.POST)
+    else:
+        form = forms.Proj_NewForm()
+
+    return render(request, 'Icarus/Proj/Proj_new.html', {'form':form})
+
+def Proj_edit(request, pk):
+    project = get_object_or_404(models.Projects, pk=pk)
+    if request.method == "POST":
+        form = forms.Proj_NewForm(request.POST, instance=project)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.modified_date = timezone.now()
+            project.save()
+            return redirect('Proj_detail', pk=project.pk)
+    else:
+        form = forms.Proj_NewForm(instance=project)
+    return render(request, 'Icarus/Proj/Proj_edit.html', {'form': form})
 
 def WR_all(request):
     wrequests = models.WorkRequests.objects.all
@@ -29,6 +67,23 @@ def WR_new(request):
         form = forms.WR_NewForm()
 
     return render(request, 'Icarus/WR/WR_new.html', {'form':form})
+
+def WR_newproj(request, ProjID):
+    if request.method == "POST":
+        form = forms.WR_NewForm(request.POST)
+        if form.is_valid():
+            WR = form.save(commit=False)
+            WR.create_by = 'unknown user'
+            WR.save()
+            return redirect('Proj_detail', pk=ProjID)
+        else:
+            form = forms.WR_NewForm(request.POST)
+    else:
+        data = {'fk_project':ProjID }
+        form = forms.WR_NewForm(initial=data)
+
+    return render(request, 'Icarus/WR/WR_new.html', {'form': form})
+
 
 def WR_edit(request, pk):
     wrequest = get_object_or_404(models.WorkRequests, pk=pk)
@@ -170,7 +225,9 @@ def TT_new(request, PFID):
         else:
             form = forms.TT_NewForm(request.POST)
     else:
-        data = {'fk_flow':PFID }
+        pftask = models.TaskTemplates.objects.filter(fk_flow=PFID).order_by('-orderid').first()
+        taskorderid = pftask.orderid + 1
+        data = {'fk_flow':PFID, 'orderid':taskorderid}
         form = forms.TT_NewForm(initial=data)
 
     return render(request, 'Icarus/TT/TT_new.html', {'form':form})
@@ -205,7 +262,7 @@ def Role_new(request):
             Role.save()
             return redirect('Role_all')
         else:
-            form = forms.TT_NewForm(request.POST)
+            form = forms.Role_NewForm(request.POST)
     else:
         form = forms.Role_NewForm()
 
@@ -227,3 +284,150 @@ def Role_edit(request, pk):
     else:
         form = forms.Role_NewForm(instance=role)
     return render(request, 'Icarus/Role/Role_edit.html', {'form': form})
+
+def Inst_all(request):
+    Institutions = models.Institutions.objects.order_by('name')
+    return render(request, 'Icarus/Inst/Inst_all.html', {'Institutions':Institutions})
+
+def Inst_new(request):
+    if request.method == "POST":
+        form = forms.Inst_NewForm(request.POST)
+        if form.is_valid():
+            Institution = form.save(commit=False)
+            Institution.create_by = 'unknown user'
+            Institution.save()
+            return redirect('Inst_all')
+        else:
+            form = forms.Inst_NewForm(request.POST)
+    else:
+        form = forms.Inst_NewForm()
+
+    return render(request, 'Icarus/Inst/Inst_new.html', {'form':form})
+
+def Inst_detail(request, pk):
+    Institution = models.Institutions.objects.get(pk=pk)
+    return render(request, 'Icarus/Inst/Inst_detail.html', {'Institution':Institution})
+
+def Inst_edit(request, pk):
+    Institution = get_object_or_404(models.Institutions, pk=pk)
+    if request.method == "POST":
+        form = forms.Inst_NewForm(request.POST, instance=Institution)
+        if form.is_valid():
+            Institution = form.save(commit=False)
+            Institution.modified_date = timezone.now()
+            Institution.save()
+            return redirect('Inst_detail', pk=Institution.pk)
+    else:
+        form = forms.Inst_NewForm(instance=Institution)
+    return render(request, 'Icarus/Inst/Inst_edit.html', {'form': form})
+
+
+def Col_all(request):
+    Colleges = models.Colleges.objects.order_by('name')
+    return render(request, 'Icarus/Col/Col_all.html', {'Colleges':Colleges})
+
+def Col_new(request):
+    if request.method == "POST":
+        form = forms.Col_NewForm(request.POST)
+        if form.is_valid():
+            College = form.save(commit=False)
+            College.create_by = 'unknown user'
+            College.save()
+            return redirect('Col_all')
+        else:
+            form = forms.Col_NewForm(request.POST)
+    else:
+        form = forms.Col_NewForm()
+
+    return render(request, 'Icarus/Col/Col_new.html', {'form':form})
+
+def Col_detail(request, pk):
+    College = models.Colleges.objects.get(pk=pk)
+    return render(request, 'Icarus/Col/Col_detail.html', {'College':College})
+
+def Col_edit(request, pk):
+    College = get_object_or_404(models.Colleges, pk=pk)
+    if request.method == "POST":
+        form = forms.Col_NewForm(request.POST, instance=College)
+        if form.is_valid():
+            College = form.save(commit=False)
+            College.modified_date = timezone.now()
+            College.save()
+            return redirect('Col_detail', pk=College.pk)
+    else:
+        form = forms.Col_NewForm(instance=College)
+    return render(request, 'Icarus/Col/Col_edit.html', {'form': form})
+
+
+def Sch_all(request):
+    Schools = models.Schools.objects.order_by('name')
+    return render(request, 'Icarus/Sch/Sch_all.html', {'Schools':Schools})
+
+def Sch_new(request):
+    if request.method == "POST":
+        form = forms.Sch_NewForm(request.POST)
+        if form.is_valid():
+            School = form.save(commit=False)
+            School.create_by = 'unknown user'
+            School.save()
+            return redirect('Sch_all')
+        else:
+            form = forms.Sch_NewForm(request.POST)
+    else:
+        form = forms.Sch_NewForm()
+
+    return render(request, 'Icarus/Sch/Sch_new.html', {'form':form})
+
+def Sch_detail(request, pk):
+    School = models.Schools.objects.get(pk=pk)
+    return render(request, 'Icarus/Sch/Sch_detail.html', {'School':School})
+
+def Sch_edit(request, pk):
+    School = get_object_or_404(models.Schools, pk=pk)
+    if request.method == "POST":
+        form = forms.Sch_NewForm(request.POST, instance=School)
+        if form.is_valid():
+            School = form.save(commit=False)
+            School.modified_date = timezone.now()
+            School.save()
+            return redirect('Sch_detail', pk=School.pk)
+    else:
+        form = forms.Sch_NewForm(instance=School)
+    return render(request, 'Icarus/Sch/Sch_edit.html', {'form': form})
+
+
+def Crs_all(request):
+    Courses = models.Courses.objects.order_by('name')
+    return render(request, 'Icarus/Crs/Crs_all.html', {'Courses':Courses})
+
+def Crs_new(request):
+    if request.method == "POST":
+        form = forms.Crs_NewForm(request.POST)
+        if form.is_valid():
+            Course = form.save(commit=False)
+            Course.create_by = 'unknown user'
+            Course.save()
+            return redirect('Crs_all')
+        else:
+            form = forms.Crs_NewForm(request.POST)
+    else:
+        form = forms.Crs_NewForm()
+
+    return render(request, 'Icarus/Crs/Crs_new.html', {'form':form})
+
+def Crs_detail(request, pk):
+    Course = models.Courses.objects.get(pk=pk)
+    return render(request, 'Icarus/Crs/Crs_detail.html', {'Course':Course})
+
+def Crs_edit(request, pk):
+    Course = get_object_or_404(models.Courses, pk=pk)
+    if request.method == "POST":
+        form = forms.Crs_NewForm(request.POST, instance=Course)
+        if form.is_valid():
+            Course = form.save(commit=False)
+            Course.modified_date = timezone.now()
+            Course.save()
+            return redirect('Crs_detail', pk=Course.pk)
+    else:
+        form = forms.Crs_NewForm(instance=Course)
+    return render(request, 'Icarus/Crs/Crs_edit.html', {'form': form})

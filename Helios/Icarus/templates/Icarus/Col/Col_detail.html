@@ -1,0 +1,14 @@
+{% extends 'Icarus/base.html' %}
+
+{% block content %}
+        <h1>Helios - College: {{ College.name }}
+        <a href="{% url 'Col_edit' pk=College.pk %}">
+          <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
+        </a></h1>
+        <ul>
+          <li><strong>Primary Key:</strong> {{ College.pk }}</li>
+          <li><strong>College Name:</strong> {{ College.name }}</li>
+          <li><strong>College Acronym:</strong> {{ College.acronym }}</li>
+        </ul>
+        </table>
+{% endblock %}

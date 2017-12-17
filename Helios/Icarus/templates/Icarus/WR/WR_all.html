@@ -10,7 +10,7 @@
         <table class="table table-striped WR">
           <thead class="black">
             <tr>
-              <th>WRID</th>
+              <th>Status</th>
               <th>Title</th>
               <th>Process Flow</th>
               <th>Created By</th>
@@ -19,7 +19,7 @@
           <tbody>
             {% for wrequest in wrequests %}
             <tr>
-              <td>{{ wrequest.pk }}</td>
+              <td>{{ wrequest.get_status_display }}</td>
               <td><a href="{% url 'WR_detail' pk=wrequest.pk %}">{{ wrequest.summary }}</a></td>
               <td>{{ wrequest.fk_flow }} (<a href="{% url 'PF_detail' pk=wrequest.fk_flow.pk %}">view</a>)</td>
               <td>{{ wrequest.create_by }}</td>

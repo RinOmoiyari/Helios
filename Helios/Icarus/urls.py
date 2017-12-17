@@ -5,7 +5,12 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
+    url(r'^proj/new/$', views.Proj_new, name='Proj_new'),
+    url(r'^proj/$', views.Proj_all, name='Proj_all'),
+    url(r'^proj/(?P<pk>\d+)/$', views.Proj_detail, name='Proj_detail'),
+    url(r'^proj/(?P<pk>\d+)/edit$', views.Proj_edit, name='Proj_edit'),
     url(r'^wr/new/$', views.WR_new, name='WR_new'),
+    url(r'^WR/new/ProjID=(?P<ProjID>\d+)$', views.WR_newproj, name='WR_newproj'),
     url(r'^wr/$', views.WR_all, name='WR_all'),
     url(r'^wr/(?P<pk>\d+)/$', views.WR_detail, name='WR_detail'),
     url(r'^wr/(?P<pk>\d+)/edit$', views.WR_edit, name='WR_edit'),
@@ -28,7 +33,22 @@ urlpatterns = [
     url(r'^role/new/', views.Role_new, name='Role_new'),
     url(r'^role/(?P<pk>\d+)/edit$', views.Role_edit, name='Role_edit'),
     url(r'^wr/(?P<WRID>\d+)/(?P<PFID>\d+)$', views.Task_initialtasks, name='Task_initialtasks'),
-
+    url(r'^inst/$', views.Inst_all, name='Inst_all'),
+    url(r'^inst/(?P<pk>\d+)/$', views.Inst_detail, name='Inst_detail'),
+    url(r'^inst/new/', views.Inst_new, name='Inst_new'),
+    url(r'^inst/(?P<pk>\d+)/edit$', views.Inst_edit, name='Inst_edit'),
+    url(r'^col/$', views.Col_all, name='Col_all'),
+    url(r'^col/(?P<pk>\d+)/$', views.Col_detail, name='Col_detail'),
+    url(r'^col/new/', views.Col_new, name='Col_new'),
+    url(r'^col/(?P<pk>\d+)/edit$', views.Col_edit, name='Col_edit'),
+    url(r'^sch/$', views.Sch_all, name='Sch_all'),
+    url(r'^sch/(?P<pk>\d+)/$', views.Sch_detail, name='Sch_detail'),
+    url(r'^sch/new/', views.Sch_new, name='Sch_new'),
+    url(r'^sch/(?P<pk>\d+)/edit$', views.Sch_edit, name='Sch_edit'),
+    url(r'^crs/$', views.Crs_all, name='Crs_all'),
+    url(r'^crs/(?P<pk>\d+)/$', views.Crs_detail, name='Crs_detail'),
+    url(r'^crs/new/', views.Crs_new, name='Crs_new'),
+    url(r'^crs/(?P<pk>\d+)/edit$', views.Crs_edit, name='Crs_edit'),
 
 
 ]

@@ -33,6 +33,8 @@
               Icarus
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'Proj_all' %}">All Projects</a>
+              <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'WR_all' %}">All Work Requests</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'Task_all' %}">All Tasks</a>
@@ -58,6 +60,10 @@
               <a class="dropdown-item" href="{% url 'PF_all' %}">All Process Flows</a>
               <a class="dropdown-item" href="{% url 'TT_all' %}">All Task Templates</a>
               <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'Inst_all' %}">All Institutions</a>
+              <a class="dropdown-item" href="{% url 'Col_all' %}">All Colleges</a>
+              <a class="dropdown-item" href="{% url 'Sch_all' %}">All Schools</a>
+              <a class="dropdown-item" href="{% url 'Crs_all' %}">All Courses</a>
               <a class="dropdown-item" href="{% url 'Role_all' %}">All Roles</a>
             </div>
           </li>
