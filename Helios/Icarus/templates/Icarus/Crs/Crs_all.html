@@ -19,7 +19,7 @@
             <tr>
               <td>{{ Course.fk_school.acronym }}</td>
               <td>{{ Course.course_id }}</td>
-              <td><a href="{% url 'Crs_detail' pk=Course.pk %}">{{ Course.name }}</a></td>
+              <td><a href="{% url 'Crs_detail' pk=Course.pk %}">.</a></td>
               <td><a href="{% url 'Crs_edit' pk=Course.pk %}"><button type="button" class="btn btn-outline-primary btn-sm">Edit</button></a></td>
             </tr>
             {% endfor %}

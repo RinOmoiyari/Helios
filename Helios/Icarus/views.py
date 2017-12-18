@@ -306,7 +306,8 @@ def Inst_new(request):
 
 def Inst_detail(request, pk):
     Institution = models.Institutions.objects.get(pk=pk)
-    return render(request, 'Icarus/Inst/Inst_detail.html', {'Institution':Institution})
+    Colleges = models.Colleges.objects.filter(fk_institution=Institution.pk)
+    return render(request, 'Icarus/Inst/Inst_detail.html', {'Institution':Institution, 'Colleges':Colleges})
 
 def Inst_edit(request, pk):
     Institution = get_object_or_404(models.Institutions, pk=pk)
@@ -341,9 +342,25 @@ def Col_new(request):
 
     return render(request, 'Icarus/Col/Col_new.html', {'form':form})
 
+def Col_newfrominst(request, IID):
+    if request.method == "POST":
+        form = forms.Col_NewForm(request.POST)
+        if form.is_valid():
+            College = form.save(commit=False)
+            College.save()
+            return redirect('Inst_detail', pk=IID)
+        else:
+            form = forms.Col_NewForm(request.POST)
+    else:
+        data = {'fk_institution': IID}
+        form = forms.Col_NewForm(initial=data)
+
+    return render(request, 'Icarus/Col/Col_new.html', {'form': form})
+
 def Col_detail(request, pk):
     College = models.Colleges.objects.get(pk=pk)
-    return render(request, 'Icarus/Col/Col_detail.html', {'College':College})
+    Schools = models.Schools.objects.filter(fk_college=College.pk)
+    return render(request, 'Icarus/Col/Col_detail.html', {'College':College, 'Schools':Schools})
 
 def Col_edit(request, pk):
     College = get_object_or_404(models.Colleges, pk=pk)
@@ -378,9 +395,25 @@ def Sch_new(request):
 
     return render(request, 'Icarus/Sch/Sch_new.html', {'form':form})
 
+def Sch_newfromcol(request, CID):
+    if request.method == "POST":
+        form = forms.Sch_NewForm(request.POST)
+        if form.is_valid():
+            School = form.save(commit=False)
+            School.save()
+            return redirect('Col_detail', pk=CID)
+        else:
+            form = forms.Col_NewForm(request.POST)
+    else:
+        data = {'fk_college': CID}
+        form = forms.Sch_NewForm(initial=data)
+
+    return render(request, 'Icarus/Sch/Sch_new.html', {'form': form})
+
 def Sch_detail(request, pk):
     School = models.Schools.objects.get(pk=pk)
-    return render(request, 'Icarus/Sch/Sch_detail.html', {'School':School})
+    Courses = models.Courses.objects.filter(fk_school=School.pk)
+    return render(request, 'Icarus/Sch/Sch_detail.html', {'School':School, 'Courses':Courses})
 
 def Sch_edit(request, pk):
     School = get_object_or_404(models.Schools, pk=pk)
@@ -397,7 +430,7 @@ def Sch_edit(request, pk):
 
 
 def Crs_all(request):
-    Courses = models.Courses.objects.order_by('name')
+    Courses = models.Courses.objects.all
     return render(request, 'Icarus/Crs/Crs_all.html', {'Courses':Courses})
 
 def Crs_new(request):
@@ -431,3 +464,75 @@ def Crs_edit(request, pk):
     else:
         form = forms.Crs_NewForm(instance=Course)
     return render(request, 'Icarus/Crs/Crs_edit.html', {'form': form})
+
+def Cvs_all(request):
+    CourseVersions = models.CourseVersions.objects.order_by('name')
+    return render(request, 'Icarus/Cvs/Cvs_all.html', {'CourseVersions':CourseVersions})
+
+def Cvs_new(request):
+    if request.method == "POST":
+        form = forms.Cvs_NewForm(request.POST)
+        if form.is_valid():
+            CourseVersion = form.save(commit=False)
+            CourseVersion.create_by = 'unknown user'
+            CourseVersion.save()
+            return redirect('Cvs_all')
+        else:
+            form = forms.Cvs_NewForm(request.POST)
+    else:
+        form = forms.Cvs_NewForm()
+
+    return render(request, 'Icarus/Cvs/Cvs_new.html', {'form':form})
+
+def Cvs_detail(request, pk):
+    CourseVersion = models.CourseVersions.objects.get(pk=pk)
+    return render(request, 'Icarus/Cvs/Cvs_detail.html', {'CourseVersion':CourseVersion})
+
+def Cvs_edit(request, pk):
+    CourseVersion = get_object_or_404(models.CourseVersions, pk=pk)
+    if request.method == "POST":
+        form = forms.Cvs_NewForm(request.POST, instance=CourseVersion)
+        if form.is_valid():
+            CourseVersion = form.save(commit=False)
+            CourseVersion.modified_date = timezone.now()
+            CourseVersion.save()
+            return redirect('Cvs_detail', pk=CourseVersion.pk)
+    else:
+        form = forms.Cvs_NewForm(instance=CourseVersion)
+    return render(request, 'Icarus/Cvs/Cvs_edit.html', {'form': form})
+
+def Bkst_all(request):
+    BookstoreGroups = models.BookstoreGroups.objects.order_by('name')
+    return render(request, 'Icarus/Bkst/Bkst_all.html', {'BookstoreGroups':BookstoreGroups})
+
+def Bkst_new(request):
+    if request.method == "POST":
+        form = forms.Bkst_NewForm(request.POST)
+        if form.is_valid():
+            BookstoreGroup = form.save(commit=False)
+            BookstoreGroup.create_by = 'unknown user'
+            BookstoreGroup.save()
+            return redirect('Bkst_all')
+        else:
+            form = forms.Bkst_NewForm(request.POST)
+    else:
+        form = forms.Bkst_NewForm()
+
+    return render(request, 'Icarus/Bkst/Bkst_new.html', {'form':form})
+
+def Bkst_detail(request, pk):
+    BookstoreGroup = models.BookstoreGroups.objects.get(pk=pk)
+    return render(request, 'Icarus/Bkst/Bkst_detail.html', {'BookstoreGroup':BookstoreGroup})
+
+def Bkst_edit(request, pk):
+    BookstoreGroup = get_object_or_404(models.BookstoreGroups, pk=pk)
+    if request.method == "POST":
+        form = forms.Bkst_NewForm(request.POST, instance=BookstoreGroup)
+        if form.is_valid():
+            BookstoreGroup = form.save(commit=False)
+            BookstoreGroup.modified_date = timezone.now()
+            BookstoreGroup.save()
+            return redirect('Bkst_detail', pk=BookstoreGroup.pk)
+    else:
+        form = forms.Bkst_NewForm(instance=BookstoreGroup)
+    return render(request, 'Icarus/Bkst/Bkst_edit.html', {'form': form})

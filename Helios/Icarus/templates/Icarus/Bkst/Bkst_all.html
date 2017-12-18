@@ -1,0 +1,27 @@
+{% extends 'Icarus/base.html' %}
+
+{% block content %}
+        <h1>Helios - All Bookstore
+          <a href="{% url 'Bkst_new' %}">
+            <button type="button" class="btn btn-outline-primary btn-sm">Create a new Bookstore Group</button>
+        </a></h1>
+        <table class="table table-striped Bkst">
+          <thead class="black">
+            <tr>
+              <th>Acronym</th>
+              <th>Name</th>
+              <th>Edit</th>
+
+          </thead>
+          <tbody>
+            {% for BookstoreGroup in BookstoreGroup %}
+            <tr>
+              <td>{{ BookstoreGroup.acronym }}</td>
+              <td><a href="{% url 'Bkst_detail' pk=Bkst.pk %}">{{ BookstoreGroup.name }}</a></td>
+              <td><a href="{% url 'Bkst_edit' pk=Bkst.pk %}"><button type="button" class="btn btn-outline-primary btn-sm">Edit</button></a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+{% endblock %}

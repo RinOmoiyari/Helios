@@ -42,22 +42,34 @@ class Inst_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Institutions
-        fields = ('name', 'acronym')
+        fields = ('acronym', 'name')
 
 class Col_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Colleges
-        fields = ('name', 'acronym', 'fk_institution')
+        fields = ('fk_institution', 'acronym','name' )
 
 class Sch_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Schools
-        fields = ('name', 'acronym', 'fk_college')
+        fields = ('fk_college', 'acronym','name')
 
 class Crs_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Courses
-        fields = ('name', 'course_id', 'fk_school')
+        fields = ('fk_school', 'course_id', 'course_pre','course_num')
+
+class Cvs_NewForm(forms.ModelForm):
+
+    class Meta:
+        model = models.CourseVersions
+        fields = ('fk_course', 'name', 'authsys_vers', 'courseroom_temp')
+
+class Bkst_NewForm(forms.ModelForm):
+
+    class Meta:
+        model = models.BookstoreGroups
+        fields = ('code', 'name')

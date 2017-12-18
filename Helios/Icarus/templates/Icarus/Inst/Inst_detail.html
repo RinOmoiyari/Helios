@@ -7,8 +7,32 @@
         </a></h1>
         <ul>
           <li><strong>Primary Key:</strong> {{ Institution.pk }}</li>
-          <li><strong>Institution Name:</strong> {{ Institution.name }}</li>
-          <li><strong>Institution Acronym:</strong> {{ Institution.acronym }}</li>
+          <li><strong>Name:</strong> {{ Institution.name }}</li>
+          <li><strong>Acronym:</strong> {{ Institution.acronym }}</li>
+          <li><strong>Primary Contact:</strong> {{ Institution.contact}}</li>
         </ul>
+        </table>
+        <h1>Related Colleges
+          <a href="{% url 'Col_newfrominst' IID=Institution.pk %}">
+            <button type="button" class="btn btn-outline-primary btn-sm">Create a new College</button>
+          </a>
+        </h1>
+        <table class="table table-striped College">
+          <thead class="black">
+            <tr>
+              <th>Acronym</th>
+              <th>Name</th>
+              <th>Edit</th>
+
+          </thead>
+          <tbody>
+            {% for College in Colleges %}
+            <tr>
+              <td>{{ College.acronym }}</td>
+              <td><a href="{% url 'Col_detail' pk=College.pk %}">{{ College.name }}</a></td>
+              <td><a href="{% url 'Col_edit' pk=College.pk %}"><button type="button" class="btn btn-outline-primary btn-sm">Edit</button></a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
 {% endblock %}

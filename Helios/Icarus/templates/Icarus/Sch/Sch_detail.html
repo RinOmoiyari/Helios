@@ -1,7 +1,8 @@
 {% extends 'Icarus/base.html' %}
 
 {% block content %}
-        <h1>Helios - School: {{ School.name }}
+<strong>Institution:</strong> <a href="{% url 'Inst_detail' pk=School.fk_college.fk_institution.pk %}">{{ School.fk_college.fk_institution }}</a> -> <strong>College:</strong> <a href="{% url 'Col_detail' pk=School.fk_college.pk %}">{{ School.fk_college }}</a>
+        <h1><strong>School:</strong> {{ School.name }}
         <a href="{% url 'Sch_edit' pk=School.pk %}">
           <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
         </a></h1>
@@ -10,5 +11,32 @@
           <li><strong>School Name:</strong> {{ School.name }}</li>
           <li><strong>School Acronym:</strong> {{ School.acronym }}</li>
         </ul>
+        </table>
+
+
+
+        <h2>Related Courses
+          <a href="{% url 'Crs_new' %}">
+            <button type="button" class="btn btn-outline-primary btn-sm">Create a new Course</button>
+        </a></h2>
+        <table class="table table-striped Course">
+          <thead class="black">
+            <tr>
+              <th>School</th>
+              <th>Course ID</th>
+              <th>Name</th>
+              <th>Edit</th>
+
+          </thead>
+          <tbody>
+            {% for Course in Courses %}
+            <tr>
+              <td>{{ Course.fk_school.acronym }}</td>
+              <td>{{ Course.course_id }}</td>
+              <td><a href="{% url 'Crs_detail' pk=Course.pk %}">{{ Course.course_pre }}{{ Course.course_num }}</a></td>
+              <td><a href="{% url 'Crs_edit' pk=Course.pk %}"><button type="button" class="btn btn-outline-primary btn-sm">Edit</button></a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
 {% endblock %}
