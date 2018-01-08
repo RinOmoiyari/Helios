@@ -137,7 +137,7 @@ class Tasks(models.Model):
     status = models.CharField(max_length=1, choices=STATUSES, default="P")
     name = models.CharField(max_length=36, blank=False)
     role = models.ForeignKey('Roles',on_delete=models.CASCADE, blank=True, null=True)
-    assigned_to = models.CharField(max_length=50)
+    assigned_to = models.CharField(max_length=50, blank=True, null=True)
     percent_complete = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], blank=True, null=True)
     adjusted_time = models.SmallIntegerField(blank=True, null=True)
 
