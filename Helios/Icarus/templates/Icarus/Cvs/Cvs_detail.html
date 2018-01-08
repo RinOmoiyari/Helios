@@ -10,4 +10,32 @@
           <li><strong>Course Version Name:</strong> {{ CourseVersion.name }}</li>
         </ul>
         </table>
+
+        <h2>Related Work Requests
+
+          <a href="{% url 'WR_new' %}">
+              <button type="button" class="btn btn-outline-primary btn-sm">New Request</button>
+          </a>
+        </h2>
+        <table class="table table-striped WR">
+          <thead class="black">
+            <tr>
+              <th>Status</th>
+              <th>Title</th>
+              <th>Process Flow</th>
+              <th>Created By</th>
+              <th>Created On</th>
+          </thead>
+          <tbody>
+            {% for wrequest in wrequests %}
+            <tr>
+              <td>{{ wrequest.get_status_display }}</td>
+              <td><a href="{% url 'WR_detail' pk=wrequest.pk %}">{{ wrequest.summary }}</a></td>
+              <td>{{ wrequest.fk_flow }} (<a href="{% url 'PF_detail' pk=wrequest.fk_flow.pk %}">view</a>)</td>
+              <td>{{ wrequest.create_by }}</td>
+              <td>{{ wrequest.create_date }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
 {% endblock %}

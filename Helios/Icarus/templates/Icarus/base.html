@@ -33,8 +33,7 @@
               Icarus
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{% url 'Proj_all' %}">All Projects</a>
-              <div class="dropdown-divider"></div>
+
               <a class="dropdown-item" href="{% url 'WR_all' %}">All Work Requests</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{% url 'Task_all' %}">All Tasks</a>
@@ -80,10 +79,11 @@
         </form>
       </div>
     </nav>
-    <div class="container">
+    <div class="container-fluid">
       {% block content %}
       {% endblock %}
     </div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

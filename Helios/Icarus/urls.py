@@ -6,10 +6,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.home, name='home'),
 
-    url(r'^proj/new/$', views.Proj_new, name='Proj_new'),
-    url(r'^proj/$', views.Proj_all, name='Proj_all'),
-    url(r'^proj/(?P<pk>\d+)/$', views.Proj_detail, name='Proj_detail'),
-    url(r'^proj/(?P<pk>\d+)/edit$', views.Proj_edit, name='Proj_edit'),
+
 
     url(r'^wr/new/$', views.WR_new, name='WR_new'),
     url(r'^WR/new/ProjID=(?P<ProjID>\d+)$', views.WR_newproj, name='WR_newproj'),
@@ -24,6 +21,8 @@ urlpatterns = [
     url(r'^task/(?P<pk>\d+)/edit$', views.Task_edit, name='Task_edit'),
     url(r'^task/(?P<pk>\d+)/delete$', views.Task_delete, name='Task_delete'),
     url(r'^task/(?P<pk>\d+)/complete$', views.Task_complete, name='Task_complete'),
+    url(r'^task/(?P<pk>\d+)/sa$', views.Task_sa, name='Task_sa'),
+    url(r'^task/(?P<pk>\d+)/hold$', views.Task_hold, name='Task_hold'),
 
     url(r'^PF/$', views.PF_all, name='PF_all'),
     url(r'^PF/new/$', views.PF_new, name='PF_new'),
@@ -39,6 +38,8 @@ urlpatterns = [
     url(r'^role/(?P<pk>\d+)/$', views.Role_detail, name='Role_detail'),
     url(r'^role/new/', views.Role_new, name='Role_new'),
     url(r'^role/(?P<pk>\d+)/edit$', views.Role_edit, name='Role_edit'),
+    url(r'^role/export$', views.Role_exp, name='Role_exp'),
+    url(r'^role/import$', views.Role_imp, name='Role_imp'),
 
     url(r'^inst/$', views.Inst_all, name='Inst_all'),
     url(r'^inst/(?P<pk>\d+)/$', views.Inst_detail, name='Inst_detail'),

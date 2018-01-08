@@ -10,6 +10,7 @@
           <thead class="black">
             <tr>
               <th>Status</th>
+              <th>Phase</th>
               <th>Title</th>
               <th>Process Flow</th>
               <th>Created By</th>
@@ -18,13 +19,21 @@
           <tbody>
             <tr>
               <td>{{ wrequest.get_status_display }}</td>
+              <td>{{ wrequest.phase }}</td>
               <td>{{ wrequest.summary }}</td>
+              {% if wrequest.fk_flow is not None %}
               <td>{{ wrequest.fk_flow }} (<a href="{% url 'PF_detail' pk=wrequest.fk_flow.pk %}">view</a>)</td>
+              {% else %}
+              <td>None</td>
+              {% endif %}
               <td>{{ wrequest.create_by }}</td>
               <td>{{ wrequest.create_date }}</td>
             </tr>
             <tr>
-              <td colspan="4">{{ wrequest.description }}</td>
+              <th colspan="6">Request Details</th>
+            </tr>
+            <tr>
+              <td colspan="6">{{ wrequest.details }}</td>
             </tr>
           </tbody>
         </table>
@@ -33,7 +42,7 @@
           <a href="{% url 'Task_new' wrequest.pk %}">
             <button type="button" class="btn btn-outline-primary btn-sm">New</button>
           </a>
-          <a href="{% url 'Task_initialtasks' wrequest.pk wrequest.fk_flow.pk %}">
+          <a href="{% url 'Task_initialtasks' wrequest.pk wrequest.fk_flow.pk|default:"1" %}">
             <button type="button" class="btn btn-outline-primary btn-sm">Create Initial Tasks</button>
           </a>
         </h2>
@@ -45,7 +54,8 @@
               <th>Title</th>
               <th>Assigned To</th>
               <th>Role</th>
-              <th>Complete</th>
+              <th>Actions</th>
+
           </thead>
           <tbody>
             {% for task in tasks %}
@@ -55,7 +65,36 @@
               <td><a href="{% url 'Task_detail' pk=task.pk %}">{{ task.name }}</a></td>
               <td>{{ task.assigned_to }}</td>
               <td>{{ task.role }}</td>
-              <td><a href="{% url 'Task_complete' pk=task.pk %}"><button type="button" class="btn btn-outline-primary btn-sm">Complete</button></td>
+              <td>
+                <div class="btn-group">
+                  {% if task.assigned_to %}
+                    <button class="btn btn-secondary btn-sm" type="button">
+                      <a class='btn-link' href="{% url 'Task_complete' pk=task.pk %}">Complete Task</a>
+                    </button>
+                  {% else %}
+                    <button class="btn btn-secondary btn-sm" type="button">
+                      <a class='btn-link' href="{% url 'Task_sa' pk=task.pk %}?returnto={{ request.path|urlencode }}">Assign Task to Me</a>
+                    </button>
+                  {% endif %}
+
+                  <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'Task_edit' pk=task.pk %}?returnto={{ request.path|urlencode }}">Edit Task</a>
+                    <a class="dropdown-item" href="{% url 'Task_sa' pk=task.pk %}?returnto={{ request.path|urlencode }}">Assign Task to Me</a>
+                    {% if task.status == 'H' %}
+                      <a class="dropdown-item" href="{% url 'Task_hold' pk=task.pk %}?returnto={{ request.path|urlencode }}">Resume Task</a>
+                    {% else %}
+                      <a class="dropdown-item" href="{% url 'Task_hold' pk=task.pk %}?returnto={{ request.path|urlencode }}">Put Task on Hold</a>
+                    {% endif %}
+
+                    <a class="dropdown-item" href="{% url 'Task_complete' pk=task.pk %}">Complete Task</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'Task_delete' pk=task.pk %}">Delete Task</a>
+                  </div>
+                </div>
+              </td>
             </tr>
             {% endfor %}
           </tbody>

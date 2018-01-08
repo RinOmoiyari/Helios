@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 # Create your models here.
@@ -25,25 +25,52 @@ class WorkRequests(models.Model):
         ("IP", "In Progress"),
         ("CX", "Closed - Canceled"),
         ("CC", "Closed - Complete"),
+        ("CP", "Closed - Project"),
     )
 
-    status = models.CharField(max_length=2, choices=REQ_STATES, default="DR")
-    summary = models.CharField(max_length=255, blank=False)
-    description = models.TextField()
-    fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE,blank=True, null=True)
-    fk_course = models.ForeignKey('Courses', on_delete=models.CASCADE,blank=True, null=True)
+    REQ_PRI = (
+        ("1", "Urgent"),
+        ("2", "High"),
+        ("3", "Mid"),
+        ("4", "Low"),
+    )
 
-    fk_project = models.ForeignKey('Projects', on_delete=models.CASCADE,blank=True, null=True)
-    PWA = models.CharField(max_length=255, null=True)
-    proj_PWA = models.BooleanField(default=True)
-    requestor = models.CharField(max_length=255, null=True)
-    proj_requestor = models.BooleanField(default=True)
-
-
+    REQ_HEALTH = (
+        ("G", "Green"),
+        ("Y", "Yellow"),
+        ("R", "Red"),
+        ("C", "Critical"),
+    )
+    #Generic Fields
     create_by = models.CharField(max_length=50, blank=False)
     create_date = models.DateTimeField(auto_now_add=True)
     modified_by = models.CharField(max_length=50, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
+    #Request Details
+    fk_work_req = models.ForeignKey('WorkRequests', on_delete=models.CASCADE, blank=True, null=True)
+    use_parent_details = models.BooleanField(default=False)
+    requestor = models.CharField(max_length=255, null=True)
+    department = models.CharField(max_length=255, null=True)
+    add_contacts = models.CharField(max_length=255, null=True)
+    pri = models.CharField(max_length=2, choices=REQ_PRI)
+    summary = models.CharField(max_length=255, blank=False)
+    impacted_loc = models.TextField(blank=True, null=True)
+    details = models.TextField(blank=True, null=True)
+    #files field here
+    date_start = models.DateTimeField(blank=True, null=True)
+    date_due = models.DateTimeField(blank=True, null=True)
+    date_launch = models.DateTimeField(blank=True, null=True)
+    #Review
+    fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE,blank=True, null=True)
+    status = models.CharField(max_length=2, choices=REQ_STATES, default="DR")
+    review_notes = models.TextField(blank=True, null=True)
+    #Work
+    phase = models.CharField(max_length=255, null=True, default='Draft')
+    health = models.CharField(max_length=2, choices=REQ_HEALTH, default="G")
+    pwa = models.CharField(max_length=255, null=True)
+    fk_courseversion = models.ForeignKey('CourseVersions', on_delete=models.CASCADE,blank=True, null=True)
+    progress_notes = models.TextField(blank=True, null=True)
+    date_closed = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.summary
@@ -65,19 +92,31 @@ class TaskTemplates(models.Model):
         ("C", "Completed"),
         ("X", "Canceled"),
     )
+
+    #Generic Fields
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=50, blank=False)
+    modified_by = models.CharField(max_length=50, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    #Order
     fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE)
     orderid = models.IntegerField(blank=False)
-    Trigger = models.IntegerField(blank=False)
+    trigger = models.IntegerField(blank=False)
+    #Defaults
+    default_status = models.CharField(max_length=1, choices=TEMPLATE_STATUSES, default='P')
+    phase = models.CharField(max_length=36, blank=True, null=True)
     name = models.CharField(max_length=36, blank=False)
     role = models.ForeignKey('Roles',on_delete=models.CASCADE,blank=True, null=True)
     self_assign = models.BooleanField(default=False)
-    default_status = models.CharField(max_length=1, choices=TEMPLATE_STATUSES, default="P")
+    est_capacity = models.SmallIntegerField(blank=True, null=True)
+
 
     def __str__(self):
         return self.name
 
 class Tasks(models.Model):
     STATUSES = (
+        ("W", "Waiting on Previous Tasks"),
         ("P", "Pre-Planning"),
         ("A", "Assignable"),
         ("I", "In Progress"),
@@ -85,17 +124,37 @@ class Tasks(models.Model):
         ("C", "Completed"),
         ("X", "Canceled"),
     )
-    fk_work_req = models.ForeignKey('WorkRequests', on_delete=models.CASCADE, blank=True, null=True)
-    fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE, blank=True, null=True)
-    fk_task_template = models.ForeignKey('TaskTemplates', on_delete=models.CASCADE, blank=True, null=True)
-    status = models.CharField(max_length=1, choices=STATUSES, default="P")
-    name = models.CharField(max_length=36, blank=False)
-    role = models.ForeignKey('Roles',on_delete=models.CASCADE, blank=True, null=True)
-    assigned_to = models.CharField(max_length=50)
+    #Generic Fields
     created_date = models.DateTimeField(auto_now_add=True)
     created_by = models.CharField(max_length=50, blank=False)
     modified_by = models.CharField(max_length=50, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
+    #References
+    fk_work_req = models.ForeignKey('WorkRequests', on_delete=models.CASCADE, blank=True, null=True)
+    fk_flow = models.ForeignKey('Flows', on_delete=models.CASCADE, blank=True, null=True)
+    fk_task_template = models.ForeignKey('TaskTemplates', on_delete=models.CASCADE, blank=True, null=True)
+    #Tracking
+    status = models.CharField(max_length=1, choices=STATUSES, default="P")
+    name = models.CharField(max_length=36, blank=False)
+    role = models.ForeignKey('Roles',on_delete=models.CASCADE, blank=True, null=True)
+    assigned_to = models.CharField(max_length=50)
+    percent_complete = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)], blank=True, null=True)
+    adjusted_time = models.SmallIntegerField(blank=True, null=True)
+
+    def initiate(self):
+        self.status = 'I'
+        self.save()
+
+    def hold(self):
+        if self.status == 'H':
+            self.status = 'I'
+        else:
+            self.status = 'H'
+        self.save()
+
+    def selfassign(self):
+        self.assigned_to = 'me'
+        self.save()
 
     def complete(self):
         self.status = 'C'
@@ -104,32 +163,13 @@ class Tasks(models.Model):
     def __str__(self):
         return self.name
 
-class Projects(models.Model):
-    PROJ_STATES = (
-        ("DR", "Draft"),
-        ("BA", "Backlog"),
-        ("RE", "Requested"),
-        ("AP", "Approved"),
-        ("DE", "Denied"),
-        ("IP", "In Progress"),
-        ("CX", "Closed - Canceled"),
-        ("CC", "Closed - Complete"),
-    )
-
-    status = models.CharField(max_length=2, choices=PROJ_STATES, default="DR")
-    summary = models.CharField(max_length=255, blank=False)
-    description = models.TextField()
-    requestor = models.CharField(max_length=255)
-    PWA = models.CharField(max_length=255)
-    create_by = models.CharField(max_length=50, blank=False)
-    create_date = models.DateTimeField(auto_now_add=True)
+class Institutions(models.Model):
+    #Generic Fields
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=50, blank=False)
     modified_by = models.CharField(max_length=50, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.summary
-
-class Institutions(models.Model):
+    #Data
     name = models.CharField(max_length=255, blank=False)
     acronym = models.CharField(max_length=10, blank=False)
     contact = models.CharField(max_length=254, blank=True, null=True)
@@ -137,6 +177,12 @@ class Institutions(models.Model):
         return self.name
 
 class Colleges(models.Model):
+    #Generic Fields
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=50, blank=False)
+    modified_by = models.CharField(max_length=50, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    #Data
     name = models.CharField(max_length=255, blank=False)
     acronym = models.CharField(max_length=10, blank=False)
     fk_institution = models.ForeignKey('Institutions', on_delete=models.CASCADE, blank=True, null=True)
@@ -145,6 +191,12 @@ class Colleges(models.Model):
         return self.name
 
 class Schools(models.Model):
+    #Generic Fields
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=50, blank=False)
+    modified_by = models.CharField(max_length=50, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    #Data
     name = models.CharField(max_length=255, blank=False)
     acronym = models.CharField(max_length=10, blank=False)
     fk_college = models.ForeignKey('Colleges', on_delete=models.CASCADE, blank=True, null=True)
@@ -153,6 +205,12 @@ class Schools(models.Model):
         return self.name
 
 class Courses(models.Model):
+    #Generic Fields
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=50, blank=False)
+    modified_by = models.CharField(max_length=50, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    #Data
     course_id = models.CharField(max_length=10, blank=False)
     course_pre = models.CharField(max_length=255, blank=True, null=True)
     course_num = models.CharField(max_length=255, blank=True, null=True)
@@ -164,11 +222,19 @@ class Courses(models.Model):
         return self.course_id
 
 class CourseVersions(models.Model):
+    #Generic Fields
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=50, blank=False)
+    modified_by = models.CharField(max_length=50, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    #What is it?
     fk_course = models.ForeignKey('Courses', on_delete=models.CASCADE, blank=True, null=True)
-    fk_bkstgroup = models.ForeignKey('BookstoreGroups', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=255, blank=True, null=True)
+    #Where is it in our various systems?
+    fk_bkstgroup = models.ForeignKey('BookstoreGroups', on_delete=models.CASCADE, blank=True, null=True)
     authsys_vers = models.CharField(max_length=254, blank=True, null=True)
     courseroom_temp = models.CharField(max_length=254, blank=True, null=True)
+    #Activity timeline
     date_start = models.DateTimeField(blank=True, null=True)
     date_end = models.DateTimeField(blank=True, null=True)
 
@@ -176,6 +242,12 @@ class CourseVersions(models.Model):
         return self.name
 
 class BookstoreGroups(models.Model):
+    #Generic Fields
+    created_date = models.DateTimeField(auto_now_add=True)
+    created_by = models.CharField(max_length=50, blank=False)
+    modified_by = models.CharField(max_length=50, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    #Data
     name = models.CharField(max_length=255, blank=True, null=True)
     code = models.CharField(max_length=255, blank=True, null=True)
 

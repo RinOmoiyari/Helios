@@ -1,48 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db.models import Max
+from django.http import HttpResponse, HttpResponseRedirect
 from . import forms, models
+import tablib
+import csv
+from import_export import resources
 
 # Create your views here.
 def home(request):
     return render(request, 'Icarus/home.html')
-
-def Proj_all(request):
-    projects = models.Projects.objects.all
-    return render(request, 'Icarus/Proj/Proj_all.html', {'projects':projects})
-
-def Proj_detail(request, pk):
-    project = models.Projects.objects.get(pk=pk)
-    WRs = models.WorkRequests.objects.filter(fk_project=project.pk)
-    return render(request, 'Icarus/Proj/Proj_detail.html', {'project':project, 'WRs':WRs})
-
-def Proj_new(request):
-    if request.method == "POST":
-        form = forms.Proj_NewForm(request.POST)
-        if form.is_valid():
-            project = form.save(commit=False)
-            project.create_by = 'unknown user'
-            project.save()
-            return redirect('Proj_all')
-        else:
-            form = forms.Proj_NewForm(request.POST)
-    else:
-        form = forms.Proj_NewForm()
-
-    return render(request, 'Icarus/Proj/Proj_new.html', {'form':form})
-
-def Proj_edit(request, pk):
-    project = get_object_or_404(models.Projects, pk=pk)
-    if request.method == "POST":
-        form = forms.Proj_NewForm(request.POST, instance=project)
-        if form.is_valid():
-            project = form.save(commit=False)
-            project.modified_date = timezone.now()
-            project.save()
-            return redirect('Proj_detail', pk=project.pk)
-    else:
-        form = forms.Proj_NewForm(instance=project)
-    return render(request, 'Icarus/Proj/Proj_edit.html', {'form': form})
 
 def WR_all(request):
     wrequests = models.WorkRequests.objects.all
@@ -88,14 +55,14 @@ def WR_newproj(request, ProjID):
 def WR_edit(request, pk):
     wrequest = get_object_or_404(models.WorkRequests, pk=pk)
     if request.method == "POST":
-        form = forms.WR_NewForm(request.POST, instance=wrequest)
+        form = forms.WR_EditForm(request.POST, instance=wrequest)
         if form.is_valid():
             wrequest = form.save(commit=False)
             wrequest.modified_date = timezone.now()
             wrequest.save()
             return redirect('WR_detail', pk=wrequest.pk)
     else:
-        form = forms.WR_NewForm(instance=wrequest)
+        form = forms.WR_EditForm(instance=wrequest)
     return render(request, 'Icarus/WR/WR_edit.html', {'form': form})
 
 def Task_all(request):
@@ -119,16 +86,24 @@ def Task_new(request, WRID):
     return render(request, 'Icarus/Task/Task_new.html', {'form': form})
 
 def Task_initialtasks(request, WRID, PFID):
-    templates = models.TaskTemplates.objects.filter(fk_flow_id=PFID)
+    if get_object_or_404(models.WorkRequests, pk=WRID).fk_flow:
+        templates = models.TaskTemplates.objects.filter(fk_flow_id=PFID).order_by('orderid')
 
-    for template in templates:
-        task = models.Tasks()
-        task.fk_work_req_id = WRID
-        task.fk_flow_id = PFID
-        task.fk_task_template_id = template.pk
-        task.role_id = template.role.id
-        task.name = template.name
-        task.save()
+        for template in templates:
+            task = models.Tasks()
+            task.fk_work_req_id = WRID
+            task.fk_flow_id = PFID
+            task.fk_task_template_id = template.pk
+            task.role_id = template.role.id
+            task.name = template.name
+            if template.trigger == 0:
+                task.status = template.default_status
+                if template.phase:
+                    task.fk_work_req.phase = template.phase
+                    task.fk_work_req.save()
+            else:
+                task.status = 'W'
+            task.save()
 
     return redirect('WR_detail', pk=WRID)
 
@@ -144,18 +119,38 @@ def Task_edit(request, pk):
             task = form.save(commit=False)
             task.modified_date = timezone.now()
             task.save()
-            return redirect('Task_detail', pk=task.pk)
+            if request.POST['returnto']:
+                return HttpResponseRedirect(request.POST['returnto'])
+            else:
+                return redirect('Task_detail', pk=task.pk)
     else:
         form = forms.Task_NewForm(instance=task)
     return render(request, 'Icarus/Task/Task_edit.html', {'form': form})
 
 def Task_delete(request, pk):
     task = get_object_or_404(models.Tasks, pk=pk)
+    WRID = task.fk_work_req_id
     task.delete()
+    return redirect('WR_detail', pk=WRID)
 
+def Task_sa(request, pk):
+    task = get_object_or_404(models.Tasks, pk=pk)
+    task.selfassign()
 
+    if request.GET['returnto']:
+        return HttpResponseRedirect(request.GET['returnto'])
+    else:
+        return redirect('Task_detail', pk=task.pk)
 
-    return redirect('Task_all')
+def Task_hold(request, pk):
+    task = get_object_or_404(models.Tasks, pk=pk)
+    task.hold()
+
+    if request.GET['returnto']:
+        return HttpResponseRedirect(request.GET['returnto'])
+    else:
+        return redirect('Task_detail', pk=task.pk)
+
 
 def Task_complete(request, pk):
     task = get_object_or_404(models.Tasks, pk=pk)
@@ -167,8 +162,11 @@ def Task_complete(request, pk):
         for othertask in othertasksinWR:
             if othertask.fk_task_template:
                 othertasktrigger = get_object_or_404(models.TaskTemplates, pk=othertask.fk_task_template.pk)
-                if othertasktrigger.Trigger == task.fk_task_template.orderid and othertask.status == 'P':
-                    othertask.status = 'A'
+                if othertasktrigger.trigger == task.fk_task_template.orderid and othertask.status == 'W':
+                    othertask.status = othertask.fk_task_template.default_status
+                    if othertask.fk_task_template.phase:
+                        task.fk_work_req.phase = othertask.fk_task_template.phase
+                        task.fk_work_req.save()
                     othertask.save()
 
     return redirect('WR_detail', pk=task.fk_work_req_id)
@@ -194,7 +192,7 @@ def PF_new(request):
 
 def PF_detail(request, pk):
     ProcessFlow = models.Flows.objects.get(pk=pk)
-    tasktemplates = models.TaskTemplates.objects.filter(fk_flow=ProcessFlow.pk)
+    tasktemplates = models.TaskTemplates.objects.filter(fk_flow=ProcessFlow.pk).order_by('orderid')
     return render(request, 'Icarus/PF/PF_detail.html', {'ProcessFlow':ProcessFlow, 'tasktemplates':tasktemplates})
 
 def PF_edit(request, pk):
@@ -225,8 +223,12 @@ def TT_new(request, PFID):
         else:
             form = forms.TT_NewForm(request.POST)
     else:
-        pftask = models.TaskTemplates.objects.filter(fk_flow=PFID).order_by('-orderid').first()
-        taskorderid = pftask.orderid + 1
+
+        if models.TaskTemplates.objects.filter(fk_flow=PFID).order_by('-orderid').exists():
+            pftask = models.TaskTemplates.objects.filter(fk_flow=PFID).order_by('-orderid').first()
+            taskorderid = pftask.orderid + 1
+        else:
+            taskorderid = 1
         data = {'fk_flow':PFID, 'orderid':taskorderid}
         form = forms.TT_NewForm(initial=data)
 
@@ -244,7 +246,10 @@ def TT_edit(request, pk):
             tasktemplate = form.save(commit=False)
             tasktemplate.modified_date = timezone.now()
             tasktemplate.save()
-            return redirect('TT_detail', pk=tasktemplate.pk)
+            if request.POST['returnto']:
+                return HttpResponseRedirect(request.POST['returnto'])
+            else:
+                return redirect('TT_detail', pk=tasktemplate.pk)
     else:
         form = forms.TT_NewForm(instance=tasktemplate)
     return render(request, 'Icarus/TT/TT_edit.html', {'form': form})
@@ -255,18 +260,19 @@ def Role_all(request):
 
 def Role_new(request):
     if request.method == "POST":
-        form = forms.Role_NewForm(request.POST)
-        if form.is_valid():
-            Role = form.save(commit=False)
-            Role.create_by = 'unknown user'
-            Role.save()
+        if request.POST['Name'] and request.POST['Acronym']:
+            role = models.Roles()
+            role.name = request.POST['Name']
+            role.acronym = request.POST['Acronym']
+            role.save()
             return redirect('Role_all')
         else:
-            form = forms.Role_NewForm(request.POST)
+            errormsg = 'Missing required fields.'
+            name = request.POST['Name']
+            acronym = request.POST['Acronym']
+            return render(request, 'Icarus/Role/Role_new.html', {'error':errormsg, 'name':name, 'acronym':acronym})
     else:
-        form = forms.Role_NewForm()
-
-    return render(request, 'Icarus/Role/Role_new.html', {'form':form})
+        return render(request, 'Icarus/Role/Role_new.html')
 
 def Role_detail(request, pk):
     Role = models.Roles.objects.get(pk=pk)
@@ -450,7 +456,8 @@ def Crs_new(request):
 
 def Crs_detail(request, pk):
     Course = models.Courses.objects.get(pk=pk)
-    return render(request, 'Icarus/Crs/Crs_detail.html', {'Course':Course})
+    CourseVersions = models.CourseVersions.objects.filter(fk_course=Course.pk)
+    return render(request, 'Icarus/Crs/Crs_detail.html', {'Course':Course, 'CourseVersions':CourseVersions})
 
 def Crs_edit(request, pk):
     Course = get_object_or_404(models.Courses, pk=pk)
@@ -486,7 +493,8 @@ def Cvs_new(request):
 
 def Cvs_detail(request, pk):
     CourseVersion = models.CourseVersions.objects.get(pk=pk)
-    return render(request, 'Icarus/Cvs/Cvs_detail.html', {'CourseVersion':CourseVersion})
+    wrequests = models.WorkRequests.objects.filter(fk_course=CourseVersion.pk)
+    return render(request, 'Icarus/Cvs/Cvs_detail.html', {'CourseVersion':CourseVersion, 'wrequests':wrequests})
 
 def Cvs_edit(request, pk):
     CourseVersion = get_object_or_404(models.CourseVersions, pk=pk)
@@ -536,3 +544,23 @@ def Bkst_edit(request, pk):
     else:
         form = forms.Bkst_NewForm(instance=BookstoreGroup)
     return render(request, 'Icarus/Bkst/Bkst_edit.html', {'form': form})
+
+def Role_exp(request):
+    role_resource = resources.RoleResource()
+    dataset = role_resource.export()
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="roles.csv"'
+    return response
+
+def Role_imp(request):
+    if request.method == 'POST':
+        roles_resource = resources.modelresource_factory(model=models.Roles)()
+        dataset = tablib.Dataset()
+        dataset.csv = request.FILES['myfile'].read()
+
+        result = roles_resource.import_data(dataset, dry_run=True)  # Test the data import
+
+        if not result.has_errors():
+            roles_resource.import_data(dataset, dry_run=False)  # Actually import now
+
+    return render(request, 'Icarus/Role/Role_imp.html')

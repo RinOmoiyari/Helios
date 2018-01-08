@@ -2,7 +2,7 @@
 
 {% block content %}
         <h1>Icarus - Task Template: {{ TaskTemplate.pk }}
-        <a href="{% url 'TT_edit' pk=tasktemplate.pk %}">
+        <a href="{% url 'TT_edit' pk=tasktemplate.pk %}?returnto={{ request.path|urlencode }}">
           <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
         </a></h1>
 
@@ -12,6 +12,6 @@
           <li><strong>Name of created task:</strong> {{ tasktemplate.name }}</li>
           <li><strong>Role of created task:</strong> {{ tasktemplate.role }}</li>
           <li><strong>Task template order ID:</strong> {{ tasktemplate.orderid }}</li>
-          <li><strong>Task activation triggered by completion of task from template:</strong> {{ tasktemplate.Trigger }}</li>
+          <li><strong>Task activation triggered by completion of task from template:</strong> {{ tasktemplate.trigger }}</li>
         </ul>
 {% endblock %}

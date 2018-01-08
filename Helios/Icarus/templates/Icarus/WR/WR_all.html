@@ -21,7 +21,11 @@
             <tr>
               <td>{{ wrequest.get_status_display }}</td>
               <td><a href="{% url 'WR_detail' pk=wrequest.pk %}">{{ wrequest.summary }}</a></td>
+              {% if wrequest.fk_flow is not None %}
               <td>{{ wrequest.fk_flow }} (<a href="{% url 'PF_detail' pk=wrequest.fk_flow.pk %}">view</a>)</td>
+              {% else %}
+              <td>None</td>
+              {% endif %}
               <td>{{ wrequest.create_by }}</td>
               <td>{{ wrequest.create_date }}</td>
             </tr>

@@ -23,6 +23,8 @@
               <th>Name</th>
               <th>Role</th>
               <th>Trigger</th>
+              <th>Status When Activated</th>
+              <th>WR Phase When Activated</th>
               <th>Edit</th>
           </thead>
           <tbody>
@@ -31,8 +33,10 @@
               <td>{{ tasktemplate.orderid }}</td>
               <td><a href="{% url 'TT_detail' pk=tasktemplate.pk %}">{{ tasktemplate.name }}</a></td>
               <td>{{ tasktemplate.role }}</td>
-              <td>{{ tasktemplate.Trigger }}</td>
-              <td><a href="{% url 'TT_edit' tasktemplate.pk %}">
+              <td>{{ tasktemplate.trigger }}</td>
+              <td>{{ tasktemplate.get_default_status_display }}</td>
+              <td>{{ tasktemplate.phase }}</td>
+              <td><a href="{% url 'TT_edit' tasktemplate.pk %}?returnto={{ request.path|urlencode }}">
                 <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
               </a></td>
             </tr>

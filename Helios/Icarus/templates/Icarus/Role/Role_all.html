@@ -4,7 +4,11 @@
         <h1>Helios - All Roles
           <a href="{% url 'Role_new' %}">
             <button type="button" class="btn btn-outline-primary btn-sm">Create a new Role</button>
-        </a></h1>
+        </a><a href="{% url 'Role_exp' %}">
+          <button type="button" class="btn btn-outline-primary btn-sm">Export Roles</button>
+      </a><a href="{% url 'Role_imp' %}">
+        <button type="button" class="btn btn-outline-primary btn-sm">Import Roles</button>
+    </a></h1>
         <table class="table table-striped Role">
           <thead class="black">
             <tr>

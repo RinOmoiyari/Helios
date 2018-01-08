@@ -2,23 +2,26 @@ from django import forms
 
 from . import models
 
-class Proj_NewForm(forms.ModelForm):
-
-    class Meta:
-        model = models.Projects
-        fields = ('summary', 'description', 'status')
 
 class WR_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.WorkRequests
-        fields = ('summary', 'description','fk_flow', 'status', 'fk_project', 'fk_course')
+        fields = ('status', 'fk_work_req', 'use_parent_details', 'requestor', 'department', 'add_contacts', 'pri', 'summary', 'impacted_loc', 'details', 'date_start', 'date_due', 'date_launch')
+
+
+
+class WR_EditForm(forms.ModelForm):
+
+    class Meta:
+        model = models.WorkRequests
+        fields = ('status', 'fk_work_req', 'use_parent_details', 'requestor', 'department', 'add_contacts', 'pri', 'summary', 'impacted_loc', 'details', 'date_start', 'date_due', 'date_launch', 'fk_flow', 'review_notes', 'phase', 'health', 'pwa', 'fk_courseversion', 'progress_notes', 'date_closed')
 
 class Task_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Tasks
-        fields = ('fk_work_req', 'fk_flow','fk_task_template', 'name', 'status', 'role')
+        fields = ('fk_work_req', 'fk_flow','fk_task_template', 'name', 'status', 'role', 'assigned_to')
 
 class PF_NewForm(forms.ModelForm):
 
@@ -30,7 +33,7 @@ class TT_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.TaskTemplates
-        fields = ('fk_flow','orderid','Trigger',  'role', 'name')
+        fields = ('fk_flow','orderid','trigger',  'role', 'name', 'default_status', 'phase','self_assign', 'est_capacity')
 
 class Role_NewForm(forms.ModelForm):
 

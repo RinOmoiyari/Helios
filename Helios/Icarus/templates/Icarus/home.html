@@ -1,12 +1,25 @@
 {% extends 'Icarus/base.html' %}
 
 {% block content %}
-        <h1>Welcome to the Helios Project</h1>
-        <p>Helios is a process tracking tool made up of two parts:</p>
-        <ol>
-          <li><Strong>Icarus</strong>: A work tracking app.</li>
-          <li><Strong>Daedalus</Strong>: A content management app.</li>
-        </ol>
-        <p>This content is still very much under development.<br />We thank you for your patience.</p>
-  
+        <div class="row">
+          <div class="col">
+            <h1>Welcome to the Helios Project</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <p>Helios is a process tracking tool made up of two parts:</p>
+            <ol>
+              <li><Strong>Icarus</strong>: A work tracking app.</li>
+              <li><Strong>Daedalus</Strong>: A content management app.</li>
+            </ol>
+            <p>This content is still very much under development.<br />We thank you for your patience.</p>
+          </div>
+          <div class="col-4">
+            <p>Primary Actions:</p>
+            <ol>
+              <li><a href="{% url 'WR_new' %}">Create a new work request</a>.</li>
+            </ol>
+          </div>
+        </div>
 {% endblock %}

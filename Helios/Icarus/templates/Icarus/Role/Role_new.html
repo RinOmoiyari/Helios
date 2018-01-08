@@ -1,10 +1,40 @@
 {% extends 'Icarus/base.html' %}
 
 {% block content %}
-<h1>Helios - Edit Role</h1>
-<form method="POST" class="post-form">
+<h1>Helios - New Role</h1>
+
+{% if error %}
+{{error}}
+{% endif %}
+
+
+
+
+
+
+
+<form method="POST" class="post-form" action="{% url 'Role_new' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+    <div class="row">
+      <div class="col-2">
+        <div class="form-group">
+          <label for="Acronym">Acronym</label>
+          <input type="text" class="form-control" id="Acronym" name="Acronym" aria-describedby="AcronymHelp" placeholder="AAA" default="{{ acronym }}">
+
+        </div>
+      </div>
+      <div class="col-8">
+        <div class="form-group">
+          <label for="Name">Title</label>
+          <input type="text" class="form-control" id="Name" name="Name" aria-describedby="NameHelp" placeholder="Enter Role Title" default="{{ name }}">
+          <small id="NameHelp" class="form-text text-muted">The full title of this role.</small>
+        </div>
+      </div>
+    </div>
+
   <button type="submit" class="save btn btn-default">Save</button>
 </form>
+
+
+
 {% endblock %}

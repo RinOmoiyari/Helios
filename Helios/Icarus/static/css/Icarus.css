@@ -6,29 +6,33 @@
     color: white;
   }
 
-  .TTs th {
-      padding-top: 12px;
-      padding-bottom: 12px;
-      text-align: left;
-      background-color: #482382;
-      color: white;
-    }
+.TTs th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #482382;
+  color: white;
+}
 
-  .post-form textarea, .post-form input {
-      width: 100%;
+.post-form textarea, .post-form input {
+  width: 100%;
+}
+.Tasks th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #708000;
+  color: white;
+}
+
+.Role th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #c18d09;
+    color: white;
   }
-  .Tasks th {
-      padding-top: 12px;
-      padding-bottom: 12px;
-      text-align: left;
-      background-color: #708000;
-      color: white;
-    }
 
-    .Role th {
-        padding-top: 12px;
-        padding-bottom: 12px;
-        text-align: left;
-        background-color: #c18d09;
-        color: white;
-      }
+a.btn-link {
+  color: white;
+}

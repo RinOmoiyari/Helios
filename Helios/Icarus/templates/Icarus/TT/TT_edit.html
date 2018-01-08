@@ -5,6 +5,7 @@
 <form method="POST" class="post-form">
   {% csrf_token %}
   {{ form.as_p }}
+  <input type="hidden" name="returnto" value="{{ request.GET.returnto }}">
   <button type="submit" class="save btn btn-default">Save</button>
 </form>
 {% endblock %}
