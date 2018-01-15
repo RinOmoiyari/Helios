@@ -1,0 +1,25 @@
+{% extends 'Helios/base.html' %}
+
+{% block content %}
+        <h1>Users - All Users
+
+          <a href="{% url 'users_new' %}">
+              <button type="button" class="btn btn-outline-primary btn-sm">Add a new user</button>
+          </a>
+        </h1>
+        <table class="table table-striped PFCs">
+          <thead class="black">
+            <tr>
+              <th>UID</th>
+              <th>Name</th>
+          </thead>
+          <tbody>
+            {% for huser in husers %}
+            <tr>
+              <td>{{ huser.pk }} </td>
+              <td><a href="{% url 'users_detail' pk=huser.pk %}">{{ huser.username }}</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+{% endblock %}

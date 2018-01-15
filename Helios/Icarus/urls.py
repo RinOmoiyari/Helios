@@ -4,7 +4,6 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
 
 
 
@@ -23,6 +22,11 @@ urlpatterns = [
     url(r'^task/(?P<pk>\d+)/complete$', views.Task_complete, name='Task_complete'),
     url(r'^task/(?P<pk>\d+)/sa$', views.Task_sa, name='Task_sa'),
     url(r'^task/(?P<pk>\d+)/hold$', views.Task_hold, name='Task_hold'),
+
+    url(r'^PFC/$', views.PFC_all, name='PFC_all'),
+    url(r'^PFC/new/$', views.PFC_new, name='PFC_new'),
+    url(r'^PFC/(?P<pk>\d+)/$', views.PFC_detail, name='PFC_detail'),
+    url(r'^PFC/(?P<pk>\d+)/edit$', views.PFC_edit, name='PFC_edit'),
 
     url(r'^PF/$', views.PF_all, name='PF_all'),
     url(r'^PF/new/$', views.PF_new, name='PF_new'),

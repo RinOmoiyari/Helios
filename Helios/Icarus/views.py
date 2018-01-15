@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db.models import Max
+from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
 from . import forms, models
 import tablib
@@ -9,7 +10,12 @@ from import_export import resources
 
 # Create your views here.
 def home(request):
-    return render(request, 'Icarus/home.html')
+    wrcount = models.WorkRequests.objects.count()
+    wrdrafts = models.WorkRequests.objects.filter(status='DR').count()
+    wrrequested = models.WorkRequests.objects.filter(status='RE').count()
+    wrinprog = models.WorkRequests.objects.filter(status='AP').filter(status='IP').count()
+    wrcomplete = models.WorkRequests.objects.filter(status='CC').count()
+    return render(request, 'Icarus/home.html', {'wrcount':wrcount, 'wrdrafts': wrdrafts, 'wrrequested':wrrequested, 'wrinprog':wrinprog, 'wrcomplete':wrcomplete})
 
 def WR_all(request):
     wrequests = models.WorkRequests.objects.all
@@ -134,8 +140,9 @@ def Task_delete(request, pk):
     return redirect('WR_detail', pk=WRID)
 
 def Task_sa(request, pk):
+    user = request.user
     task = get_object_or_404(models.Tasks, pk=pk)
-    task.selfassign()
+    task.selfassign(user)
 
     if request.GET['returnto']:
         return HttpResponseRedirect(request.GET['returnto'])
@@ -171,6 +178,47 @@ def Task_complete(request, pk):
 
     return redirect('WR_detail', pk=task.fk_work_req_id)
 
+#===== Process Flow Category Views ========
+
+def PFC_all(request):
+    ProcessFlowCats = models.PFCat.objects.all
+    return render(request, 'Icarus/PFC/PFC_all.html', {'ProcessFlowCats':ProcessFlowCats})
+
+def PFC_new(request):
+    if request.method == "POST":
+        form = forms.PFC_NewForm(request.POST)
+        if form.is_valid():
+            ProcessFlowCat = form.save(commit=False)
+            ProcessFlowCat.create_by = 'unknown user'
+            ProcessFlowCat.save()
+            return redirect('PFC_detail', pk=ProcessFlowCat.pk)
+        else:
+            form = forms.PFC_NewForm(request.POST)
+    else:
+        form = forms.PFC_NewForm()
+
+    return render(request, 'Icarus/PFC/PFC_new.html', {'form':form})
+
+def PFC_detail(request, pk):
+    ProcessFlowCat = models.PFCat.objects.get(pk=pk)
+    ProcessFlows = models.Flows.objects.filter(fk_PFCat=ProcessFlowCat.pk).order_by('-pk')
+    return render(request, 'Icarus/PFC/PFC_detail.html', {'ProcessFlowCat':ProcessFlowCat, 'ProcessFlows':ProcessFlows})
+
+def PFC_edit(request, pk):
+    processflowcat = get_object_or_404(models.PFCat, pk=pk)
+    if request.method == "POST":
+        form = forms.PFC_NewForm(request.POST, instance=processflowcat)
+        if form.is_valid():
+            processflowcat = form.save(commit=False)
+            processflowcat.modified_date = timezone.now()
+            processflowcat.save()
+            return redirect('PFC_detail', pk=processflowcat.pk)
+    else:
+        form = forms.PFC_NewForm(instance=processflowcat)
+    return render(request, 'Icarus/PFC/PFC_edit.html', {'form': form})
+
+
+#===== Process Flow Views ========
 def PF_all(request):
     ProcessFlows = models.Flows.objects.all
     return render(request, 'Icarus/PF/PF_all.html', {'ProcessFlows':ProcessFlows})

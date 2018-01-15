@@ -1,7 +1,7 @@
-{% extends 'Icarus/base.html' %}
+{% extends 'Helios/base.html' %}
 
 {% block content %}
-        <h1>Helios - Role: {{ Role.name }} 
+        <h1>Helios - Role: {{ Role.name }}
         <a href="{% url 'Role_edit' pk=Role.pk %}">
           <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
         </a></h1>

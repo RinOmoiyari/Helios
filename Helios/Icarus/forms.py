@@ -23,11 +23,17 @@ class Task_NewForm(forms.ModelForm):
         model = models.Tasks
         fields = ('fk_work_req', 'fk_flow','fk_task_template', 'name', 'status', 'role', 'assigned_to')
 
+class PFC_NewForm(forms.ModelForm):
+
+    class Meta:
+        model = models.PFCat
+        fields = ('name', 'description', 'selectable')
+
 class PF_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Flows
-        fields = ('name', 'description')
+        fields = ('name', 'description', 'selectable', 'duration', 'instigator', 'fk_PFCat' )
 
 class TT_NewForm(forms.ModelForm):
 
@@ -51,13 +57,13 @@ class Col_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Colleges
-        fields = ('fk_institution', 'acronym','name' )
+        fields = ('fk_institution', 'acronym','name', 'fk_institution' )
 
 class Sch_NewForm(forms.ModelForm):
 
     class Meta:
         model = models.Schools
-        fields = ('fk_college', 'acronym','name')
+        fields = ('fk_college', 'acronym','name', 'fk_college')
 
 class Crs_NewForm(forms.ModelForm):
 

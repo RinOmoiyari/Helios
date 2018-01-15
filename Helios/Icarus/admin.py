@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Flows, WorkRequests, Tasks, TaskTemplates, Roles
+from . import models
 from import_export.admin import ImportExportModelAdmin
 from Helios import resources
 
@@ -9,10 +9,14 @@ class RoleAdmin(ImportExportModelAdmin):
 class TTAdmin(ImportExportModelAdmin):
     resource_class = resources.TTResource
 
+class PFAdmin(ImportExportModelAdmin):
+    resource_class = resources.PFResource
 
 # Register your models here.
-admin.site.register(Flows)
-admin.site.register(WorkRequests)
-admin.site.register(Roles, RoleAdmin)
-admin.site.register(TaskTemplates, TTAdmin)
-admin.site.register(Tasks)
+admin.site.register(models.PFCat)
+admin.site.register(models.Flows, PFAdmin)
+admin.site.register(models.TaskTemplates, TTAdmin)
+admin.site.register(models.Roles, RoleAdmin)
+
+admin.site.register(models.WorkRequests)
+admin.site.register(models.Tasks)

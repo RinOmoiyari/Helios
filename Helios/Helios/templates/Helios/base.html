@@ -30,7 +30,7 @@
 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Icarus
+              Icarus (Requests)
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
@@ -42,23 +42,38 @@
 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Daedalus
+              Daedalus (Content)
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Request a new piece of content</a>
+              <a class="dropdown-item">NOT STARTED, IGNORE</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">All Content Object</a>
-              <a class="dropdown-item" href="#">Another action</a>
+
             </div>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Admin
+              Haphaestus (Flows)
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'PFC_all' %}">All PF Categories</a>
               <a class="dropdown-item" href="{% url 'PF_all' %}">All Process Flows</a>
               <a class="dropdown-item" href="{% url 'TT_all' %}">All Task Templates</a>
-              <div class="dropdown-divider"></div>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Hestia (Users)
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'users_all' %}">All Users</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Helios (Admin)
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{% url 'Inst_all' %}">All Institutions</a>
               <a class="dropdown-item" href="{% url 'Col_all' %}">All Colleges</a>
               <a class="dropdown-item" href="{% url 'Sch_all' %}">All Schools</a>
@@ -66,6 +81,8 @@
               <a class="dropdown-item" href="{% url 'Cvs_all' %}">All Course Versions</a>
               <a class="dropdown-item" href="{% url 'Role_all' %}">All Roles</a>
               <a class="dropdown-item" href="{% url 'Bkst_all' %}">All Bookstore Groups</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{% url 'admin:index' %}">Admin</a>
             </div>
           </li>
           <!--<li class="nav-item">
@@ -73,10 +90,11 @@
           </li>-->
 
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        {% if user.is_authenticated %}
+          Signed in as: {{ user.username }} (<a href="{% url 'logout' %}">Logout</a>)
+        {% else %}
+          <a href="{% url 'login' %}"><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Login</button></a>
+        {% endif %}
       </div>
     </nav>
     <div class="container-fluid">

@@ -1,0 +1,46 @@
+{% extends 'Helios/base.html' %}
+
+{% block content %}
+        <h1>Icarus - Process Flow Category: {{ ProcessFlowCat.pk }}
+        <a href="{% url 'PFC_edit' pk=ProcessFlowCat.pk %}">
+          <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
+        </a></h1>
+        <ul>
+          <li><strong>PFCID:</strong> {{ ProcessFlowCat.pk }}</li>
+          <li><strong>Name:</strong> {{ ProcessFlowCat.name }}</li>
+          <li><strong>Description:</strong> {{ ProcessFlowCat.description }}</li>
+          <li><strong>Selectable:</strong> {{ ProcessFlowCat.selectable }}</li>
+
+        </ul>
+
+        <h2>Related Process Flows
+          <a href="{% url 'PF_new' %}">
+            <button type="button" class="btn btn-outline-primary btn-sm">New</button>
+          </a>
+        </h2>
+        <table class="table table-striped PFs">
+          <thead class="black">
+            <tr>
+              <th>PFID</th>
+              <th>Selectable</th>
+              <th>Duration</th>
+              <th>Name</th>
+              <th>Instigator</th>
+              <th>Edit</th>
+          </thead>
+          <tbody>
+            {% for ProcessFlow in ProcessFlows %}
+            <tr>
+              <td>{{ ProcessFlow.pk }}</td>
+              <td>{{ ProcessFlow.selectable }}</td>
+              <td>{{ ProcessFlow.duration }}</td>
+              <td><a href="{% url 'PF_detail' pk=ProcessFlow.pk %}">{{ ProcessFlow.name }}</a></td>
+              <td>{{ ProcessFlow.instigator }}</td>
+              <td><a href="{% url 'PF_edit' ProcessFlow.pk %}?returnto={{ request.path|urlencode }}">
+                <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
+              </a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'Helios/base.html' %}
+
+{% block content %}
+<h1>Edit User {{ huser.pk }}: {{ huser.username }}</h1>
+{% if errormsg %}
+ERROR: {{ errormsg }}
+{% endif %}
+<form method="POST" class="post-form" action="{% url 'users_edit' pk=huser.pk %}">
+  {% csrf_token %}
+    <div class="row">
+      <div class="col-2">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" placeholder="Enter username" value="{{ username }}">
+
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Enter email" value="{{ email }}">
+
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <div class="form-group">
+          <label for="password">New Password</label>
+          <input type="password" class="form-control" id="password" name="password" aria-describedby="passwordHelp" placeholder="Enter password" value="{{ password }}">
+        </div>
+      </div>
+
+      <div class="col-2">
+        <div class="form-group">
+          <label for="passwordCom">Password Confirmation</label>
+          <input type="password" class="form-control" id="passwordCom" name="passwordCom" aria-describedby="passwordComHelp" placeholder="Re-enter password" value="{{ passwordCom }}">
+        </div>
+      </div>
+    </div>
+
+  <button type="submit" class="save btn btn-default">Save</button>
+</form>
+{% endblock %}

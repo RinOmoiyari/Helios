@@ -1,0 +1,44 @@
+{% extends 'Helios/base.html' %}
+
+{% block content %}
+        <div class="row">
+          <div class="col">
+            <h1>Welcome to the Helios Project</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <p>Helios is a process tracking tool made up of two parts:</p>
+            <ol>
+              <li><Strong>Icarus</strong>: A work tracking app.</li>
+              <li><Strong>Daedalus</Strong>: A content management app.</li>
+            </ol>
+            <p>These apps are supported by the following tools:</p>
+            <ol>
+              <li><Strong>Haphaestus</Strong>: The automation system.</li>
+              <li><Strong>Pythia</Strong>: The data visualization and reporting system.</li>
+              <li><Strong>Hestia</Strong>: The user management system.</li>
+            </ol>
+            <p>This content is still very much under development.<br />We thank you for your patience.</p>
+          </div>
+          <div class="col-4">
+            <p><Strong>Helios Status:</Strong></p>
+            <ol>
+              <li>Work Requests Created: {{ wrcount }} total.</li>
+              <ul>
+                <li>{{ wrdrafts }} being drafted.</li>
+                <li>{{ wrrequested }} requested.</li>
+                <li>{{ wrinprog }} in progress.</li>
+                <li>{{ wrcomplete }} completed.</li>
+              </ul>
+            </ol>
+
+            <p><Strong>Primary Actions:</Strong></p>
+            <ol>
+              <li><a href="{% url 'WR_new' %}">Create a new work request</a>.</li>
+              <li><a href="#">View my requests</a>.</li>
+              <li><a href="#">View tasks assigned to me</a>.</li>
+            </ol>
+          </div>
+        </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'Helios/base.html' %}
+
+{% block content %}
+        <h1>Icarus - All Process Flow Categories
+
+          <a href="{% url 'PFC_new' %}">
+              <button type="button" class="btn btn-outline-primary btn-sm">Create a new Process Flow Category</button>
+          </a>
+        </h1>
+        <table class="table table-striped PFCs">
+          <thead class="black">
+            <tr>
+              <th>PFCID</th>
+              <th>Name</th>
+              <th>Description</th>
+          </thead>
+          <tbody>
+            {% for ProcessFlowCat in ProcessFlowCats %}
+            <tr>
+              <td>{{ ProcessFlowCat.pk }} </td>
+              <td><a href="{% url 'PFC_detail' pk=ProcessFlowCat.pk %}">{{ ProcessFlowCat.name }}</a></td>
+              <td>{{ ProcessFlowCat.description }} </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+{% endblock %}

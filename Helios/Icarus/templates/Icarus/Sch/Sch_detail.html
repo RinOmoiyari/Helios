@@ -1,4 +1,4 @@
-{% extends 'Icarus/base.html' %}
+{% extends 'Helios/base.html' %}
 
 {% block content %}
 <strong>Institution:</strong> <a href="{% url 'Inst_detail' pk=School.fk_college.fk_institution.pk %}">{{ School.fk_college.fk_institution }}</a> -> <strong>College:</strong> <a href="{% url 'Col_detail' pk=School.fk_college.pk %}">{{ School.fk_college }}</a>

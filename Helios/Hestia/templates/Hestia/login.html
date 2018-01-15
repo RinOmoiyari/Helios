@@ -1,0 +1,30 @@
+{% extends 'Helios/base.html' %}
+
+{% block content %}
+<h1>Log into Helios</h1>
+{% if errormsg %}
+ERROR: {{ errormsg }}
+{% endif %}
+<form method="POST" class="post-form" action="{% url 'login' %}">
+  {% csrf_token %}
+    <div class="row">
+      <div class="col-2">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" class="form-control" id="username" name="username" aria-describedby="usernameHelp" placeholder="Enter username" value="{{ username }}" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-2">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" name="password" aria-describedby="passwordHelp" placeholder="Enter password" value="{{ password }}" />
+        </div>
+      </div>
+    </div>
+
+  <button type="submit" class="save btn btn-default">Save</button>
+</form>
+
+{% endblock %}

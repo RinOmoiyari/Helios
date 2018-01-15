@@ -1,4 +1,4 @@
-{% extends 'Icarus/base.html' %}
+{% extends 'Helios/base.html' %}
 
 {% block content %}
         <h1>Icarus - All Tasks</h1>
@@ -18,7 +18,7 @@
               <td>{{ task.pk }}</td>
               <td>{{ task.get_status_display }}</td>
               <td><a href="{% url 'Task_detail' pk=task.pk %}">{{ task.name }}</a></td>
-              <td>{{ task.assigned_to }}</td>
+              <td>{{ task.get_assigned_to_display }}</td>
               <td>{{ task.role }}</td>
               <td><a href="{% url 'WR_detail' pk=task.fk_work_req.pk %}">{{ task.fk_work_req.summary }}</a></td>
             </tr>

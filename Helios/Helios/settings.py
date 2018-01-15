@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Icarus',
+    'Hestia',
     'import_export',
 ]
 
@@ -58,7 +59,7 @@ ROOT_URLCONF = 'Helios.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['Helios/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

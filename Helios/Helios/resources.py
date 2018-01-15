@@ -9,3 +9,7 @@ class RoleResource(resources.ModelResource):
 class TTResource(resources.ModelResource):
     class Meta:
         model = models.TaskTemplates
+
+class PFResource(resources.ModelResource):
+    class Meta:
+        model = models.Flows

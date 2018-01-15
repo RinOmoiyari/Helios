@@ -1,7 +1,7 @@
-{% extends 'Icarus/base.html' %}
+{% extends 'Helios/base.html' %}
 
 {% block content %}
-<h1>New Process Flow</h1>
+<h1>Edit Process Flow</h1>
 <form method="POST" class="post-form">
   {% csrf_token %}
   {{ form.as_p }}
