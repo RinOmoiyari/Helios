@@ -19,8 +19,9 @@
             <th>TID</th>
             <th>Status</th>
             <th>Task Title</th>
-            <th>Work Request</th>
+
             <th>Role</th>
+            <th>Work Request</th>
             <th>Actions</th>
 
         </thead>
@@ -30,8 +31,9 @@
             <td>{{ task.pk }}</td>
             <td>{{ task.get_status_display }}</td>
             <td><a href="{% url 'Task_detail' pk=task.pk %}">{{ task.name }}</a></td>
-            <td><a href="{% url 'WR_detail' pk=task.fk_work_req_id %}">{{ task.fk_work_req }}</a></td>
             <td>{{ task.role }}</td>
+            <td><a href="{% url 'WR_detail' pk=task.fk_work_req_id %}">{{ task.fk_work_req }}</a></td>
+
             <td>
               <div class="btn-group">
                 {% if task.assigned_to %}

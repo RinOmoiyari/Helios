@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^PF/new/$', views.PF_new, name='PF_new'),
     url(r'^PF/(?P<pk>\d+)/$', views.PF_detail, name='PF_detail'),
     url(r'^PF/(?P<pk>\d+)/edit$', views.PF_edit, name='PF_edit'),
+    url(r'^PF/new/from=(?P<frompk>\d+)$', views.PF_newfromexisting, name='PF_newfromexisting'),
 
     url(r'^tt/$', views.TT_all, name='TT_all'),
     url(r'^tt/(?P<pk>\d+)/$', views.TT_detail, name='TT_detail'),

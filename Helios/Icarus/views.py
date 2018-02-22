@@ -238,6 +238,16 @@ def PF_new(request):
 
     return render(request, 'Icarus/PF/PF_new.html', {'form':form})
 
+def PF_newfromexisting(request, frompk):
+    if frompk:
+        pass
+        return render(request, 'Icarus/PF/PF_new.html')
+    else:
+        frompf = get_object_or_404(models.Flows, pk=frompk)
+        pfcat = frompf.fk_pfcat
+        duration = frompf.duration
+        return render(request, 'Icarus/PF/PF_new.html', {'pfcat':pfcat, 'duration':duration })
+
 def PF_detail(request, pk):
     ProcessFlow = models.Flows.objects.get(pk=pk)
     tasktemplates = models.TaskTemplates.objects.filter(fk_flow=ProcessFlow.pk).order_by('orderid')

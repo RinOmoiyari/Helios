@@ -4,7 +4,11 @@
         <h1>Icarus - Process Flow: {{ ProcessFlow.pk }}
         <a href="{% url 'PF_edit' pk=ProcessFlow.pk %}">
           <button type="button" class="btn btn-outline-primary btn-sm">Edit</button>
-        </a></h1>
+        </a>
+        <a href="{% url 'PF_newfromexisting' pk=ProcessFlow.pk %}">
+          <button type="button" class="btn btn-outline-primary btn-sm">New Process Flow from this</button>
+        </a>
+      </h1>
         <ul>
           <li><strong>PFID:</strong> {{ ProcessFlow.pk }}</li>
           <li><strong>Name:</strong> {{ ProcessFlow.name }}</li>

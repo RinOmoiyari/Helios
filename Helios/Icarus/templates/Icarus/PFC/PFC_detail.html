@@ -33,7 +33,7 @@
             <tr>
               <td>{{ ProcessFlow.pk }}</td>
               <td>{{ ProcessFlow.selectable }}</td>
-              <td>{{ ProcessFlow.duration }}</td>
+              <td>{{ ProcessFlow.get_duration_display }}</td>
               <td><a href="{% url 'PF_detail' pk=ProcessFlow.pk %}">{{ ProcessFlow.name }}</a></td>
               <td>{{ ProcessFlow.instigator }}</td>
               <td><a href="{% url 'PF_edit' ProcessFlow.pk %}?returnto={{ request.path|urlencode }}">

@@ -1,10 +1,65 @@
 {% extends 'Helios/base.html' %}
-
 {% block content %}
-<h1>New Process Flow</h1>
-<form method="POST" class="post-form">
+<h1>New Process Flow
+{% if frompk %}
+ from existing PF
+{% endif %}
+</h1>
+
+{% if errormsg %}
+ERROR: {{ errormsg }}
+{% endif %}
+
+<form method="POST" class="post-form" action="{% url 'users_new' %}">
   {% csrf_token %}
-  {{ form.as_p }}
+    <div class="row">
+
+      <div class="col-4">
+        <div class="form-group">
+          <label for="pfcat">Category</label>
+          <input type="text" class="form-control" id="pfcat" name="pfcat" aria-describedby="pfcatHelp" placeholder="Enter Category" value="{{ pfcat }}" />
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <label for="duration">Duration</label>
+          <input type="text" class="form-control" id="duration" name="duration" aria-describedby="durationHelp" placeholder="Enter duration" value="{{ duration }}" />
+        </div>
+      </div>
+      <div class="col-2">
+        <div class="form-group">
+          <label for="selectable">Selectable</label>
+          <input type="checkbox" class="form-control" id="selectable" name="selectable" aria-describedby="selectableHelp" value="{{ selectable }}" />
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" placeholder="Enter name" value="{{ name }}" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input type="text" class="form-control" id="description" name="description" aria-describedby="descriptionHelp" placeholder="Enter description" value="{{ description }}" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-8">
+        <div class="form-group">
+          <label for="instigator">Instigator</label>
+          <input type="text" class="form-control" id="instigator" name="instigator" aria-describedby="instigatorHelp" placeholder="Enter instigator" value="{{ instigator }}" />
+        </div>
+      </div>
+    </div>
+
   <button type="submit" class="save btn btn-default">Save</button>
 </form>
+
 {% endblock %}
