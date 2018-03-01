@@ -81,6 +81,7 @@ class WorkRequests(models.Model):
     modified_by = models.CharField(max_length=50, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
 
+
     #Request Details
     fk_work_req = models.ForeignKey('WorkRequests', on_delete=models.SET_NULL, blank=True, null=True)
     use_parent_details = models.BooleanField(default=False)
@@ -202,7 +203,8 @@ class Tasks(models.Model):
         self.save()
 
     def __str__(self):
-        return self.name
+        displayname = f"WR {self.fk_work_req_id}: {self.name}"
+        return displayname
 
 class Institutions(models.Model):
     #Generic Fields
