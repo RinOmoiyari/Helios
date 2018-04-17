@@ -9,14 +9,6 @@ import csv
 from import_export import resources
 
 # Create your views here.
-def home(request):
-    wrcount = models.WorkRequests.objects.count()
-    wrdrafts = models.WorkRequests.objects.filter(status='DR').count()
-    wrrequested = models.WorkRequests.objects.filter(status='RE').count()
-    wrinprog = models.WorkRequests.objects.filter(status='AP').filter(status='IP').count()
-    wrcomplete = models.WorkRequests.objects.filter(status='CC').count()
-    return render(request, 'Icarus/home.html', {'wrcount':wrcount, 'wrdrafts': wrdrafts, 'wrrequested':wrrequested, 'wrinprog':wrinprog, 'wrcomplete':wrcomplete})
-
 def WR_all(request):
     wrequests = models.WorkRequests.objects.all
     return render(request, 'Icarus/WR/WR_all.html', {'wrequests':wrequests})
