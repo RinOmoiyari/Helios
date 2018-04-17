@@ -24,13 +24,13 @@
           <div class="col-4">
             <p><Strong>Helios Status:</Strong></p>
             <ol>
-              <li>Work Requests Created: {{ wrcount }} total.</li>
+              <li>Work Requests Created: <strong>{{ wrcount }}</strong> total.</li>
               <ul>
-                <li>{{ wrdrafts }} being drafted.</li>
-                <li>{{ wrrequested }} requested.</li>
-                <li>{{ wrapproved }} approved, waiting to start.</li>
-                <li>{{ wrinprog }} in progress.</li>
-                <li>{{ wrcomplete }} completed.</li>
+                <li><strong>{{ wrdrafts }}</strong> being drafted.</li>
+                <li><strong>{{ wrrequested }}</strong> requested.</li>
+                <li><strong>{{ wrapproved }}</strong> approved, waiting to start.</li>
+                <li><strong>{{ wrinprog }}</strong> in progress.</li>
+                <li><strong>{{ wrcomplete }}</strong> completed.</li>
               </ul>
             </ol>
 
@@ -38,7 +38,7 @@
             <ol>
               <li><a href="{% url 'WR_new' %}">Create a new work request</a>.</li>
               <li><a href="#">View my requests</a>. (Not yet built)</li>
-              <li><a href="#">View tasks assigned to me</a>.(Not yet built)</li>
+              <li><a href="#">View tasks assigned to me</a>. (Not yet built)</li>
             </ol>
           </div>
         </div>
